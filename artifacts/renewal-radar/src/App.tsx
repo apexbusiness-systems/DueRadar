@@ -10,6 +10,7 @@ import { WorkspaceProvider } from "@/contexts/WorkspaceContext";
 import { Sidebar, StatusBar, RadarMark } from "@/components/risk-radar/Chrome";
 import { cn } from "@/lib/utils";
 import LandingPage from "@/pages/landing";
+import InfoDetailPage from "@/pages/info-detail";
 import CommandCenterPage from "@/pages/command-center";
 import RiskRegisterPage from "@/pages/risk-register";
 import RiskRecordPage from "@/pages/risk-record";
@@ -239,6 +240,7 @@ function AppRouter() {
               <Route path="/" component={HomeRedirect} />
               <Route path="/sign-in/*?" component={SignInPage} />
               <Route path="/sign-up/*?" component={SignUpPage} />
+              <Route path="/info/:category" component={InfoDetailPage} />
 
               {/* Shell-wrapped authenticated routes */}
               <Route path="/dashboard">

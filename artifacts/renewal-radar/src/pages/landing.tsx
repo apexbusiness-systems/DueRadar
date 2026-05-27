@@ -1,6 +1,7 @@
 import { useRef, useEffect, useState, useCallback } from "react";
 import { Link } from "wouter";
 import { RadarMark, BtnAmber, BtnGhost } from "@/components/risk-radar/Chrome";
+import { ContractsIcon, PermitsIcon, InsuranceIcon, ComplianceIcon, DeadlinesIcon, ExposureIcon } from "@/pages/info-detail";
 
 /* ── Orbiting category labels (DOM elements, not canvas) ── */
 interface OrbitalNode {
@@ -247,6 +248,25 @@ function HeroOverlay() {
   );
 }
 
+const getCategoryIcon = (label: string, color: string, size = 24) => {
+  switch (label.toLowerCase()) {
+    case "contracts":
+      return <ContractsIcon color={color} size={size} />;
+    case "permits":
+      return <PermitsIcon color={color} size={size} />;
+    case "insurance":
+      return <InsuranceIcon color={color} size={size} />;
+    case "compliance":
+      return <ComplianceIcon color={color} size={size} />;
+    case "deadlines":
+      return <DeadlinesIcon color={color} size={size} />;
+    case "exposure":
+      return <ExposureIcon color={color} size={size} />;
+    default:
+      return null;
+  }
+};
+
 /* ── Category definitions ── */
 const CATEGORIES = [
   { label: "CONTRACTS", count: "12 Expiring", color: "#FF6B35", desc: "Auto-renew windows, notice periods, term expiry." },
@@ -352,87 +372,91 @@ export default function LandingPage({ onEnter }: { onEnter?: () => void }) {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
 
             {/* Hero card — CONTRACTS */}
-            <div
-              className="lg:col-span-5 lg:row-span-2 flex flex-col justify-between p-8 group cursor-default transition-all duration-300 hover:-translate-y-1"
-              style={{
-                background: "linear-gradient(145deg, #131a2e 0%, #0e1625 100%)",
-                border: "1px solid rgba(255,107,53,.22)",
-                borderLeft: "4px solid #FF6B35",
-                borderRadius: 18,
-                boxShadow: "0 8px 32px rgba(0,0,0,.28), inset 0 1px 0 rgba(255,255,255,.04)",
-                minHeight: 280,
-              }}
-            >
-              <div>
-                <div
-                  className="w-12 h-12 rounded-xl grid place-items-center mb-6"
-                  style={{ background: "rgba(255,107,53,.14)", border: "1.5px solid rgba(255,107,53,.35)" }}
-                >
-                  <div className="w-3 h-3 rounded-full" style={{ background: "#FF6B35", boxShadow: "0 0 10px rgba(255,107,53,.5)" }} />
-                </div>
-                <div className="text-[13px] font-bold text-[#F0F4F8] uppercase tracking-widest mb-1">{CATEGORIES[0].label}</div>
-                <div className="text-[28px] font-black tracking-tight mb-3" style={{ color: "#FF6B35" }}>{CATEGORIES[0].count}</div>
-                <div className="text-[14px] text-[#8898A8] leading-relaxed max-w-[260px]">{CATEGORIES[0].desc}</div>
-              </div>
-              <div className="mt-8 pt-6" style={{ borderTop: "1px solid rgba(255,107,53,.14)" }}>
-                <span className="text-[11px] font-bold uppercase tracking-widest text-[#FF6B35] opacity-70">Highest Risk Category</span>
-              </div>
-            </div>
-
-            {/* Row 1: PERMITS + INSURANCE */}
-            {CATEGORIES.slice(1, 3).map((c, i) => (
+            <Link href="/info/contracts" className="lg:col-span-5 lg:row-span-2 block">
               <div
-                key={c.label}
-                className="lg:col-span-4 p-6 flex flex-col justify-between transition-all duration-300 hover:-translate-y-1 cursor-default"
+                className="flex flex-col justify-between p-8 group cursor-pointer transition-all duration-300 hover:-translate-y-1 h-full"
                 style={{
-                  background: "#0F1624",
-                  border: "1px solid rgba(255,255,255,.07)",
-                  borderTop: `3px solid ${c.color}`,
-                  borderRadius: 14,
-                  boxShadow: "0 4px 16px rgba(0,0,0,.2)",
-                  animationDelay: `${(i + 1) * 0.07}s`,
+                  background: "linear-gradient(145deg, #131a2e 0%, #0e1625 100%)",
+                  border: "1px solid rgba(255,107,53,.22)",
+                  borderLeft: "4px solid #FF6B35",
+                  borderRadius: 18,
+                  boxShadow: "0 8px 32px rgba(0,0,0,.28), inset 0 1px 0 rgba(255,255,255,.04)",
+                  minHeight: 280,
                 }}
               >
                 <div>
                   <div
-                    className="w-9 h-9 rounded-lg grid place-items-center mb-4"
-                    style={{ background: `${c.color}16`, border: `1px solid ${c.color}40` }}
+                    className="w-12 h-12 rounded-xl grid place-items-center mb-6"
+                    style={{ background: "rgba(255,107,53,.14)", border: "1.5px solid rgba(255,107,53,.35)" }}
                   >
-                    <div className="w-2 h-2 rounded-full" style={{ background: c.color }} />
+                    {getCategoryIcon("contracts", "#FF6B35", 26)}
                   </div>
-                  <div className="text-[13px] font-bold text-[#F0F4F8] uppercase tracking-widest mb-1">{c.label}</div>
-                  <div className="text-[18px] font-black mb-2" style={{ color: c.color }}>{c.count}</div>
+                  <div className="text-[13px] font-bold text-[#F0F4F8] uppercase tracking-widest mb-1">{CATEGORIES[0].label}</div>
+                  <div className="text-[28px] font-black tracking-tight mb-3" style={{ color: "#FF6B35" }}>{CATEGORIES[0].count}</div>
+                  <div className="text-[14px] text-[#8898A8] leading-relaxed max-w-[260px]">{CATEGORIES[0].desc}</div>
                 </div>
-                <div className="text-[13px] text-[#6A7A8A] leading-relaxed">{c.desc}</div>
+                <div className="mt-8 pt-6" style={{ borderTop: "1px solid rgba(255,107,53,.14)" }}>
+                  <span className="text-[11px] font-bold uppercase tracking-widest text-[#FF6B35] opacity-70">Highest Risk Category</span>
+                </div>
               </div>
+            </Link>
+
+            {/* Row 1: PERMITS + INSURANCE */}
+            {CATEGORIES.slice(1, 3).map((c, i) => (
+              <Link key={c.label} href={`/info/${c.label.toLowerCase()}`} className="lg:col-span-4 block">
+                <div
+                  className="p-6 flex flex-col justify-between h-full transition-all duration-300 hover:-translate-y-1 cursor-pointer"
+                  style={{
+                    background: "#0F1624",
+                    border: "1px solid rgba(255,255,255,.07)",
+                    borderTop: `3px solid ${c.color}`,
+                    borderRadius: 14,
+                    boxShadow: "0 4px 16px rgba(0,0,0,.2)",
+                    animationDelay: `${(i + 1) * 0.07}s`,
+                  }}
+                >
+                  <div>
+                    <div
+                      className="w-9 h-9 rounded-lg grid place-items-center mb-4"
+                      style={{ background: `${c.color}16`, border: `1px solid ${c.color}40` }}
+                    >
+                      {getCategoryIcon(c.label, c.color, 20)}
+                    </div>
+                    <div className="text-[13px] font-bold text-[#F0F4F8] uppercase tracking-widest mb-1">{c.label}</div>
+                    <div className="text-[18px] font-black mb-2" style={{ color: c.color }}>{c.count}</div>
+                  </div>
+                  <div className="text-[13px] text-[#6A7A8A] leading-relaxed">{c.desc}</div>
+                </div>
+              </Link>
             ))}
 
             {/* Row 2: COMPLIANCE + DEADLINES + EXPOSURE (3 slim cards) */}
             {CATEGORIES.slice(3, 6).map((c, i) => (
-              <div
-                key={c.label}
-                className={`${i < 2 ? "lg:col-span-4" : "lg:col-span-3"} p-5 flex flex-col justify-between transition-all duration-300 hover:-translate-y-1 cursor-default`}
-                style={{
-                  background: "#0F1624",
-                  border: "1px solid rgba(255,255,255,.07)",
-                  borderTop: `3px solid ${c.color}`,
-                  borderRadius: 14,
-                  boxShadow: "0 4px 16px rgba(0,0,0,.2)",
-                  animationDelay: `${(i + 3) * 0.07}s`,
-                }}
-              >
-                <div>
-                  <div
-                    className="w-8 h-8 rounded-lg grid place-items-center mb-3"
-                    style={{ background: `${c.color}16`, border: `1px solid ${c.color}40` }}
-                  >
-                    <div className="w-2 h-2 rounded-full" style={{ background: c.color }} />
+              <Link key={c.label} href={`/info/${c.label.toLowerCase()}`} className={`${i < 2 ? "lg:col-span-4" : "lg:col-span-3"} block`}>
+                <div
+                  className="p-5 flex flex-col justify-between h-full transition-all duration-300 hover:-translate-y-1 cursor-pointer"
+                  style={{
+                    background: "#0F1624",
+                    border: "1px solid rgba(255,255,255,.07)",
+                    borderTop: `3px solid ${c.color}`,
+                    borderRadius: 14,
+                    boxShadow: "0 4px 16px rgba(0,0,0,.2)",
+                    animationDelay: `${(i + 3) * 0.07}s`,
+                  }}
+                >
+                  <div>
+                    <div
+                      className="w-8 h-8 rounded-lg grid place-items-center mb-3"
+                      style={{ background: `${c.color}16`, border: `1px solid ${c.color}40` }}
+                    >
+                      {getCategoryIcon(c.label, c.color, 18)}
+                    </div>
+                    <div className="text-[12px] font-bold text-[#F0F4F8] uppercase tracking-widest mb-1">{c.label}</div>
+                    <div className="text-[16px] font-black mb-2" style={{ color: c.color }}>{c.count}</div>
                   </div>
-                  <div className="text-[12px] font-bold text-[#F0F4F8] uppercase tracking-widest mb-1">{c.label}</div>
-                  <div className="text-[16px] font-black mb-2" style={{ color: c.color }}>{c.count}</div>
+                  <div className="text-[12px] text-[#6A7A8A] leading-relaxed">{c.desc}</div>
                 </div>
-                <div className="text-[12px] text-[#6A7A8A] leading-relaxed">{c.desc}</div>
-              </div>
+              </Link>
             ))}
 
           </div>
