@@ -262,8 +262,8 @@ export default function InfoDetailPage() {
         <div className="max-w-[1120px] mx-auto px-6 h-16 flex items-center justify-between">
           <Link href="/">
             <div className="flex items-center gap-2.5 cursor-pointer">
-              <RadarMark size={28} />
-              <span className="text-[15px] font-bold tracking-tight text-[#F0F4F8]">
+              <RadarMark size={60} />
+              <span className="text-[24px] font-extrabold tracking-tight text-[#F0F4F8]">
                 Due<span className="text-[#F5A623]">Radar</span>
               </span>
             </div>
