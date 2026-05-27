@@ -2,13 +2,13 @@
    DueRadar — Orbital Command System
    Visual anchor: deep obsidian · amber beam · cyan orbital rings
    Space Grotesk globally · tabular numerals on metrics
-══════════════════════════════════════════════════════════ */
+ ══════════════════════════════════════════════════════════ */
 
 @layer theme, base, clerk, components, utilities;
 @import "tailwindcss";
 @import "@clerk/themes/shadcn.css";
 @import "tw-animate-css";
-@plugin "@tailwindcss/typography";
+@import "@tailwindcss/typography";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -76,6 +76,19 @@
 
 /* ═══════════ DARK OBSIDIAN THEME (default, always-on) ═══════════ */
 :root {
+  /* Fluid type clamp definitions */
+  --text-xs:   clamp(0.72rem,  0.68rem + 0.20vw, 0.82rem);
+  --text-sm:   clamp(0.80rem, 0.75rem + 0.25vw, 0.92rem);
+  --text-base: clamp(0.92rem, 0.88rem + 0.20vw, 1.02rem);
+  --text-lg:   clamp(1.05rem, 0.98rem + 0.35vw, 1.20rem);
+  --text-xl:   clamp(1.18rem, 1.08rem + 0.50vw, 1.45rem);
+  --text-2xl:  clamp(1.35rem, 1.20rem + 0.75vw, 1.80rem);
+  --text-3xl:  clamp(1.60rem, 1.40rem + 1.00vw, 2.30rem);
+  --text-4xl:  clamp(2.00rem, 1.70rem + 1.50vw, 3.10rem);
+  --text-hero: clamp(2.40rem, 1.90rem + 2.50vw, 4.00rem);
+
+  --space-fluid-x: clamp(1rem, 4vw, 2.5rem);
+
   --button-outline: rgba(255,255,255, .10);
   --badge-outline: rgba(255,255,255, .05);
   --opaque-button-border-intensity: 9;
@@ -249,7 +262,9 @@
     background: #05070B;
     color: #F0F4F8;
     -webkit-font-smoothing: antialiased;
-    overflow: hidden;
+    /* overflow managed per-route: landing uses window scroll, shell manages its own */
+    overflow-y: auto;
+    overflow-x: hidden;
   }
   button {
     font-family: inherit;
@@ -308,6 +323,11 @@
 }
 
 @layer utilities {
+  .container-fluid {
+    width: 100%;
+    margin-inline: auto;
+    padding-inline: var(--space-fluid-x);
+  }
   input[type="search"]::-webkit-search-cancel-button {
     @apply hidden;
   }
