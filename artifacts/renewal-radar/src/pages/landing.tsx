@@ -293,8 +293,8 @@ export default function LandingPage({ onEnter }: { onEnter?: () => void }) {
       <header className="sticky top-0 z-50 bg-[#050709]/80 backdrop-blur-md border-b border-[rgba(255,255,255,.06)] transition-all duration-300">
         <div className="max-w-[1120px] mx-auto px-6 h-16 flex items-center justify-between">
           <div className="flex items-center gap-2.5">
-            <RadarMark size={28} />
-            <span className="text-[15px] font-bold tracking-tight text-[#F0F4F8]">
+            <RadarMark size={60} />
+            <span className="text-[24px] font-extrabold tracking-tight text-[#F0F4F8]">
               Due<span className="text-[#F5A623]">Radar</span>
             </span>
           </div>
@@ -338,8 +338,11 @@ export default function LandingPage({ onEnter }: { onEnter?: () => void }) {
         <OrbitingLabels />
 
         <div className="relative z-[2] px-20 py-20 max-w-[640px]">
-          <div className="flex items-center gap-3.5 mb-8">
-            <RadarMark size={48} />
+          <div className="inline-flex items-center gap-2 bg-[rgba(245,166,35,.08)] border border-[rgba(245,166,35,.22)] rounded-full px-3.5 py-1.5 mb-8 w-fit shadow-[0_0_15px_rgba(245,166,35,.06)]">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#F5A623] animate-pulse" />
+            <span className="text-[10px] font-bold text-[#FFB84D] uppercase tracking-[0.16em]">
+              Active Risk Radar Network
+            </span>
           </div>
           <h1 className="text-[68px] font-bold tracking-[-0.04em] leading-none mb-0 text-white">
             Due<span className="text-[#F5A623]">Radar</span>
@@ -602,4 +605,3 @@ export default function LandingPage({ onEnter }: { onEnter?: () => void }) {
       </section>
     </div>
   );
-}
