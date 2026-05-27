@@ -328,7 +328,7 @@ function OwnerCoverage() {
   );
 }
 
-/* ── Command Center Page ── */
+/* ── CommandCenter Page ── */
 export default function CommandCenterPage() {
   const data = RR_DATA;
 
@@ -345,11 +345,7 @@ export default function CommandCenterPage() {
         }
       />
       <div
-        className="flex-1 overflow-y-auto grid gap-4 px-5.5 pb-7 pt-4.5"
-        style={{
-          gridTemplateColumns: "1fr 380px",
-          minHeight: 0,
-        }}
+        className="flex-1 overflow-y-auto grid grid-cols-1 xl:grid-cols-[1fr_380px] gap-4 px-4 sm:px-5.5 pb-7 pt-4.5"
       >
         {/* Left column */}
         <div className="flex flex-col gap-4">
