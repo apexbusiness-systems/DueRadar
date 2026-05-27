@@ -372,9 +372,9 @@ export default function LandingPage({ onEnter }: { onEnter?: () => void }) {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
 
             {/* Hero card — CONTRACTS */}
-            <Link href="/info/contracts">
+            <Link href="/info/contracts" className="lg:col-span-5 lg:row-span-2 block">
               <div
-                className="lg:col-span-5 lg:row-span-2 flex flex-col justify-between p-8 group cursor-pointer transition-all duration-300 hover:-translate-y-1 h-full"
+                className="flex flex-col justify-between p-8 group cursor-pointer transition-all duration-300 hover:-translate-y-1 h-full"
                 style={{
                   background: "linear-gradient(145deg, #131a2e 0%, #0e1625 100%)",
                   border: "1px solid rgba(255,107,53,.22)",
@@ -403,9 +403,9 @@ export default function LandingPage({ onEnter }: { onEnter?: () => void }) {
 
             {/* Row 1: PERMITS + INSURANCE */}
             {CATEGORIES.slice(1, 3).map((c, i) => (
-              <Link key={c.label} href={`/info/${c.label.toLowerCase()}`}>
+              <Link key={c.label} href={`/info/${c.label.toLowerCase()}`} className="lg:col-span-4 block">
                 <div
-                  className="lg:col-span-4 p-6 flex flex-col justify-between h-full transition-all duration-300 hover:-translate-y-1 cursor-pointer"
+                  className="p-6 flex flex-col justify-between h-full transition-all duration-300 hover:-translate-y-1 cursor-pointer"
                   style={{
                     background: "#0F1624",
                     border: "1px solid rgba(255,255,255,.07)",
@@ -432,9 +432,9 @@ export default function LandingPage({ onEnter }: { onEnter?: () => void }) {
 
             {/* Row 2: COMPLIANCE + DEADLINES + EXPOSURE (3 slim cards) */}
             {CATEGORIES.slice(3, 6).map((c, i) => (
-              <Link key={c.label} href={`/info/${c.label.toLowerCase()}`}>
+              <Link key={c.label} href={`/info/${c.label.toLowerCase()}`} className={`${i < 2 ? "lg:col-span-4" : "lg:col-span-3"} block`}>
                 <div
-                  className={`${i < 2 ? "lg:col-span-4" : "lg:col-span-3"} p-5 flex flex-col justify-between h-full transition-all duration-300 hover:-translate-y-1 cursor-pointer`}
+                  className="p-5 flex flex-col justify-between h-full transition-all duration-300 hover:-translate-y-1 cursor-pointer"
                   style={{
                     background: "#0F1624",
                     border: "1px solid rgba(255,255,255,.07)",
