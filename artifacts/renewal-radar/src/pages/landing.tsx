@@ -345,14 +345,10 @@ export default function LandingPage({ onEnter }: { onEnter?: () => void }) {
             </span>
           </div>
           <h1 className="text-[68px] font-bold tracking-[-0.04em] leading-none mb-0 text-white">
-            Due<span className="text-[#F5A623]">Radar</span>
+            Deadlines Don’t Warn You. DueRadar Does.
           </h1>
-          <p className="text-[22px] font-medium text-[#8898A8] mt-4 mb-3 tracking-[-0.01em]">
-            Your business deadline warning system.
-          </p>
-          <p className="text-[15px] text-[#4A5568] mb-9 leading-relaxed max-w-[500px]">
-            Track contracts, permits, insurance, compliance dates, renewals, and operational
-            exposure before they become expensive problems.
+          <p className="text-[17px] font-medium text-[#CBD5E1] mt-5 mb-9 leading-relaxed max-w-[520px]">
+            Catch renewals, filings, permits, contracts, and compliance dates before they turn into expensive surprises.
           </p>
           <div className="flex gap-3 flex-wrap">
             <BtnAmber onClick={onEnter}>Open Command Center →</BtnAmber>
