@@ -56,11 +56,11 @@ const clerkAppearance = {
   },
   elements: {
     rootBox: "w-full flex justify-center",
-    cardBox: "rounded-2xl w-[440px] max-w-full overflow-hidden shadow-lg",
+    cardBox: "w-full max-w-[440px]",
     card: "!shadow-none !border-0 !bg-transparent !rounded-none",
     footer: "!shadow-none !border-0 !bg-transparent !rounded-none",
-    headerTitle: "font-semibold text-xl",
-    headerSubtitle: "text-sm text-[#B7C4D6]",
+    headerTitle: "font-semibold text-2xl tracking-tight text-[#F8FAFC]",
+    headerSubtitle: "text-sm leading-relaxed text-[#CBD5E1]",
     socialButtonsBlockButtonText: "font-medium text-[#E6EDF6]",
     formFieldLabel: "text-sm font-medium text-[#E6EDF6]",
     footerActionLink: "font-medium hover:underline",
@@ -71,15 +71,22 @@ const clerkAppearance = {
     alertText: "text-[#E6EDF6]",
     logoBox: "flex items-center justify-center mb-2",
     logoImage: "h-8 w-auto",
-    socialButtonsBlockButton: "transition-colors bg-[#1D2A41] hover:bg-[#243754] border border-[#2F3F5E]",
-    formButtonPrimary: "font-medium",
+    socialButtonsBlockButton: "min-h-11 transition-colors bg-[#1E293B] hover:bg-[#243754] border border-[rgba(148,163,184,0.35)] focus-visible:ring-2 focus-visible:ring-[#F59E0B] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0F172A]",
+    formButtonPrimary: "min-h-11 font-medium bg-gradient-to-r from-[#F59E0B] to-[#F97316] text-[#1E293B] hover:brightness-110 active:brightness-95 focus-visible:ring-2 focus-visible:ring-[#FDBA74] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0F172A] disabled:opacity-60",
     formFieldInput: "bg-[#1D2A41] border border-[#2F3F5E] text-[#F0F4F8] placeholder:text-[#A7B5C9]",
     footerAction: "pt-4",
     dividerLine: "bg-[#2F3F5E]",
     alert: "rounded-lg",
+    formFieldHintText: "text-xs text-[#94A3B8]",
+    formFieldErrorText: "text-sm text-[#FCA5A5]",
+    formFieldInputShowPasswordButton: "text-[#94A3B8] hover:text-[#E2E8F0]",
+    formResendCodeLink: "text-[#F59E0B] hover:text-[#FDBA74]",
+    devModeNotice: "hidden",
+    developmentModeNotice: "hidden",
+    badge: "hidden",
     otpCodeFieldInput: "",
     formFieldRow: "mb-4",
-    main: "p-2",
+    main: "p-0",
   },
 };
 
@@ -107,15 +114,70 @@ function ClerkQueryClientCacheInvalidator() {
 
 function SignInPage() {
   return (
-    <div
-      className="flex min-h-screen items-center justify-center px-4"
-      style={{ background: "#05070B" }}
-    >
-      <SignIn
-        routing="path"
-        path={`${basePath}/sign-in`}
-        signUpUrl={`${basePath}/sign-up`}
+    <div className="relative flex min-h-screen items-center justify-center overflow-hidden px-4 py-8 sm:px-6">
+      <div
+        aria-hidden="true"
+        className="absolute inset-0"
+        style={{
+          background:
+            "radial-gradient(circle at 50% 12%, rgba(245, 158, 11, 0.16), transparent 32%), radial-gradient(circle at 15% 80%, rgba(59, 130, 246, 0.10), transparent 30%), linear-gradient(180deg, #0B1220 0%, #070B12 100%)",
+        }}
       />
+      <div className="relative w-full max-w-5xl overflow-hidden rounded-[28px] border border-[rgba(148,163,184,0.22)] bg-[rgba(15,23,42,0.86)] shadow-[0_24px_80px_rgba(0,0,0,0.55),inset_0_1px_0_rgba(255,255,255,0.05)]">
+        <div aria-hidden="true" className="h-1 w-full bg-gradient-to-r from-[#F59E0B] to-[#F97316]" />
+        <div className="grid md:grid-cols-[1fr_440px]">
+          <aside className="hidden border-r border-[rgba(148,163,184,0.16)] p-10 md:flex md:flex-col md:justify-between">
+            <div>
+              <div className="mb-8 flex items-center gap-2 text-lg font-semibold text-[#F8FAFC]">
+                <RadarMark size={22} />
+                <span>Due<span className="text-[#F59E0B]">Radar</span></span>
+              </div>
+              <h1 className="text-3xl font-semibold leading-tight text-[#F8FAFC]">
+                Never miss a critical business deadline again.
+              </h1>
+              <p className="mt-4 max-w-md text-base leading-relaxed text-[#CBD5E1]">
+                Track renewals, filings, permits, contracts, and alerts from one secure dashboard.
+              </p>
+              <ul className="mt-8 space-y-3 text-sm text-[#CBD5E1]">
+                <li>• Filing and compliance reminders</li>
+                <li>• Contract and renewal alerts</li>
+                <li>• Business deadline visibility</li>
+              </ul>
+            </div>
+            <p className="mt-8 text-xs text-[#94A3B8]">
+              Built for owner-led teams that cannot afford missed deadlines.
+            </p>
+          </aside>
+          <section className="p-6 sm:p-8">
+            <div className="mb-5 md:hidden">
+              <div className="mb-4 flex items-center gap-2 text-base font-semibold text-[#F8FAFC]">
+                <RadarMark size={20} />
+                <span>Due<span className="text-[#F59E0B]">Radar</span></span>
+              </div>
+              <h1 className="text-2xl font-semibold leading-tight text-[#F8FAFC]">
+                Never miss a critical business deadline again.
+              </h1>
+              <p className="mt-2 text-sm text-[#CBD5E1]">
+                Track renewals, filings, permits, contracts, and alerts from one secure dashboard.
+              </p>
+            </div>
+            <SignIn
+              routing="path"
+              path={`${basePath}/sign-in`}
+              signUpUrl={`${basePath}/sign-up`}
+              fallbackRedirectUrl={`${basePath}/dashboard`}
+              forceRedirectUrl={`${basePath}/dashboard`}
+            />
+            <p className="mt-4 text-center text-xs text-[#94A3B8]">Secure sign-in. No password required.</p>
+            <nav aria-label="Legal and support links" className="mt-4 flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-xs text-[#CBD5E1]">
+              <a className="hover:text-[#F8FAFC] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F59E0B] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0F172A] rounded-sm" href={`${basePath}/privacy`}>Privacy</a>
+              <a className="hover:text-[#F8FAFC] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F59E0B] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0F172A] rounded-sm" href={`${basePath}/terms`}>Terms</a>
+              <a className="hover:text-[#F8FAFC] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F59E0B] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0F172A] rounded-sm" href="mailto:support@dueradar.icu">Support</a>
+              <a className="hover:text-[#F8FAFC] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F59E0B] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0F172A] rounded-sm" href={`${basePath}/security`}>Security</a>
+            </nav>
+          </section>
+        </div>
+      </div>
     </div>
   );
 }
@@ -222,7 +284,10 @@ function AppRouter() {
       signUpUrl={`${basePath}/sign-up`}
       localization={{
         signIn: {
-          start: { title: "Welcome back", subtitle: "Sign in to DueRadar" },
+          start: {
+            title: "Welcome back",
+            subtitle: "Manage critical deadlines, renewals, and alerts from one secure dashboard.",
+          },
         },
         signUp: {
           start: { title: "Get started", subtitle: "Track your deadlines with DueRadar" },
