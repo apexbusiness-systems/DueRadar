@@ -328,7 +328,7 @@ function OwnerCoverage() {
   );
 }
 
-/* ── Command Center Page ── */
+/* ── CommandCenter Page ── */
 export default function CommandCenterPage() {
   const data = RR_DATA;
 
