@@ -15,6 +15,13 @@
       "when": 1747526400000,
       "tag": "0001_flowc_integration",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1749168000000,
+      "tag": "0003_indexes_and_constraints",
+      "breakpoints": true
     }
   ]
 }

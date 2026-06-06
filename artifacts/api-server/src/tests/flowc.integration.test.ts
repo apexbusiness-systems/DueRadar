@@ -17,11 +17,10 @@ function makeFlowCTestApp() {
   const app = express();
   app.use(
     express.json({
-      verify: (req: any, _res: any, buf: Buffer) => {
-        const url: string =
-          (req as any).originalUrl ?? (req as any).url ?? "";
+      verify: (req: express.Request, _res: express.Response, buf: Buffer) => {
+        const url: string = req.originalUrl ?? req.url ?? "";
         if (url.startsWith("/api/internal/flowc")) {
-          (req as any).rawBody = buf;
+          (req as express.Request & { rawBody?: Buffer }).rawBody = buf;
         }
       },
     }),
@@ -52,18 +51,6 @@ const CLEAN_BODY = JSON.stringify({
   review_required: false,
   summary: "Routine compliance check passed",
   evidence: {},
-});
-
-const FLAGGED_BODY = JSON.stringify({
-  event_type: "compliance.violation",
-  object_id: `obj-flagged-${crypto.randomUUID()}`,
-  occurred_at: new Date().toISOString(),
-  signal_kind: "violation",
-  severity: "high",
-  review_required: true,
-  review_code: "GDPR-001",
-  summary: "Data processing violation detected",
-  evidence: { field: "user_data" },
 });
 
 // ── Suite setup ───────────────────────────────────────────────────────────────

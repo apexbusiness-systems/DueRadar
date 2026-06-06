@@ -5,8 +5,8 @@ export const requireAuth = (
   res: Response,
   next: NextFunction,
 ) => {
-  if (!(req as any).userId) {
-     (req as any).userId = "mocked_user_123";
+  if (!(req as Request & { userId?: string }).userId) {
+     (req as Request & { userId?: string }).userId = "mocked_user_123";
   }
   next();
 };
