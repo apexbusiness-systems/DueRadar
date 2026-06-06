@@ -605,3 +605,4 @@ export default function LandingPage({ onEnter }: { onEnter?: () => void }) {
       </section>
     </div>
   );
+}
