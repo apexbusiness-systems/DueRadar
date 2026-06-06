@@ -149,7 +149,7 @@ function RiskCockpit({ workspaceId }: { workspaceId: number }) {
           <div className="w-12 h-12 bg-emerald-100 rounded-2xl flex items-center justify-center mx-auto mb-3">
             <CheckCircle2 className="w-6 h-6 text-emerald-600" />
           </div>
-          <p className="font-bold text-slate-700 mb-1">All clear — no active risks</p>
+          <p className="font-bold text-slate-700 mb-1">All clear - no active risks</p>
           <p className="text-sm text-slate-400">Every active obligation has an owner, backup, and reminder rules.</p>
         </div>
       ) : (
@@ -239,7 +239,7 @@ function RiskCockpit({ workspaceId }: { workspaceId: number }) {
                 <Link href="/obligations?status=active">
                   <div className="text-center py-1.5">
                     <span className="text-xs text-slate-500 hover:text-slate-900 hover:underline">
-                      +{(risk.overdueItems.length + risk.criticalItems.length) - 6} more — view all
+                      +{(risk.overdueItems.length + risk.criticalItems.length) - 6} more - view all
                     </span>
                   </div>
                 </Link>
@@ -384,7 +384,7 @@ export default function DashboardPage() {
         </div>
 
         <div className="grid lg:grid-cols-3 gap-6">
-          {/* Upcoming table — 2/3 width */}
+          {/* Upcoming table - 2/3 width */}
           <div className="lg:col-span-2">
             <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm">
               <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100">

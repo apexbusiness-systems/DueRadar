@@ -267,7 +267,7 @@ function OwnerCoverage() {
     { name: "Sarah Chen", initials: "SC", risks: 14, covered: 12 },
     { name: "James Okafor", initials: "JO", risks: 8, covered: 5 },
     { name: "Maya Rao", initials: "MR", risks: 11, covered: 10 },
-    { name: "Unassigned", initials: "—", risks: 4, covered: 0 },
+    { name: "Unassigned", initials: "-", risks: 4, covered: 0 },
   ];
   return (
     <div style={{ background: "#0A0E18", border: "1px solid rgba(255,255,255,.07)", borderRadius: 13, boxShadow: "0 4px 20px rgba(0,0,0,.5)", overflow: "hidden" }}>
@@ -294,12 +294,12 @@ function OwnerCoverage() {
             <div
               className="w-[30px] h-[30px] rounded-full grid place-items-center text-[11px] font-bold shrink-0"
               style={{
-                background: o.initials === "—" ? "transparent" : "#151D30",
+                background: o.initials === "-" ? "transparent" : "#151D30",
                 border:
-                  o.initials === "—"
+                  o.initials === "-"
                     ? "1.5px dashed #4A5568"
                     : `1px solid ${color}44`,
-                color: o.initials === "—" ? "#4A5568" : "#F5A623",
+                color: o.initials === "-" ? "#4A5568" : "#F5A623",
               }}
             >
               {o.initials}
@@ -307,7 +307,7 @@ function OwnerCoverage() {
             <div>
               <div
                 className="text-[13px] font-semibold mb-1"
-                style={{ color: o.initials === "—" ? "#FF4040" : "#F0F4F8" }}
+                style={{ color: o.initials === "-" ? "#FF4040" : "#F0F4F8" }}
               >
                 {o.name}
               </div>

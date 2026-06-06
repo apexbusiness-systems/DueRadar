@@ -5,7 +5,7 @@ export default function RiskIntakePage() {
     <>
       <PageHead
         title="Due Intake"
-        sub="Turn your spreadsheet into monitored business risk — in under 3 minutes."
+        sub="Turn your spreadsheet into monitored business risk - in under 3 minutes."
         actions={
           <>
             <BtnGhost>Cancel</BtnGhost>
@@ -66,7 +66,7 @@ export default function RiskIntakePage() {
               >
                 Insurance &nbsp; 4/16 &nbsp; Hartford
                 <br />
-                Permit &nbsp;&nbsp;&nbsp;&nbsp; ? &nbsp;&nbsp;&nbsp; —
+                Permit &nbsp;&nbsp;&nbsp;&nbsp; ? &nbsp;&nbsp;&nbsp; -
                 <br />
                 Contract &nbsp; 5/23 &nbsp; Anvil
                 <br />
@@ -138,7 +138,7 @@ export default function RiskIntakePage() {
           }}
         >
           {[
-            { n: "01", label: "Upload source", sub: "Drop your CSV — up to 10,000 rows", state: "done" },
+            { n: "01", label: "Upload source", sub: "Drop your CSV - up to 10,000 rows", state: "done" },
             { n: "02", label: "Map fields", sub: "Match columns to risk fields (9/11 auto-detected)", state: "active" },
             { n: "03", label: "Validate risks", sub: "Date sanity, owner emails, duplicate detection", state: "" },
             { n: "04", label: "Activate monitoring", sub: "Arm reminders, assign owners, publish to radar", state: "" },
