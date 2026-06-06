@@ -1,8 +1,6 @@
 app = "dueradar-api"
 primary_region = "iad"
 
-[build]
-  image = "ghcr.io/apexbusiness-systems/dueradar-api:latest"
 
 [env]
   NODE_ENV = "production"
