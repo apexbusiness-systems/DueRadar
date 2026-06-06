@@ -2,13 +2,13 @@
    DueRadar — Orbital Command System
    Visual anchor: deep obsidian · amber beam · cyan orbital rings
    Space Grotesk globally · tabular numerals on metrics
-══════════════════════════════════════════════════════════ */
+ ══════════════════════════════════════════════════════════ */
 
 @layer theme, base, clerk, components, utilities;
 @import "tailwindcss";
 @import "@clerk/themes/shadcn.css";
 @import "tw-animate-css";
-@plugin "@tailwindcss/typography";
+@import "@tailwindcss/typography";
 
 @custom-variant dark (&:is(.dark *));
 

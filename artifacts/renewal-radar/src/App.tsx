@@ -23,7 +23,7 @@ import ObligationNewPage from "@/pages/obligation-new";
 import ObligationsPage from "@/pages/obligations";
 import ObligationDetailPage from "@/pages/obligation-detail";
 
-const clerkPubKey = (import.meta.env.VITE_CLERK_PUBLISHABLE_KEY as string) || "pk_test_YWJvdmUtc3VuYmVhbS0yMS5jbGVyay5hY2NvdW50cy5kZXYk";
+const clerkPubKey = (import.meta.env.VITE_CLERK_PUBLISHABLE_KEY as string) || "pk_test_YWJvdev-c3VuYmVhbS0yMS5jbGVyay5hY2NvdW50cy5kZXYk";
 
 const clerkProxyUrl = import.meta.env.VITE_CLERK_PROXY_URL;
 const basePath = import.meta.env.BASE_URL.replace(/"/, "");
