@@ -37,7 +37,7 @@ jobs:
           cache: "pnpm"
       - run: pnpm install --frozen-lockfile
       - name: Apply migrations
-        run: pnpm --filter @workspace/db run migrate
+        run: pnpm --filter @workspace/db run push
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
 
