@@ -4,11 +4,21 @@ import {
   obligationsTable,
   auditLogsTable,
   workspaceMembersTable,
-  reminderRulesTable,
 } from "@workspace/db";
-import { eq, and, gte, lte, like, or, isNull, notInArray } from "drizzle-orm";
+import { eq, and, gte, lte, like, or } from "drizzle-orm";
 import { requireAuth, type AuthenticatedRequest } from "../middlewares/requireAuth";
 import type { Request, Response } from "express";
+import { insertObligationSchema } from "@workspace/db";
+import { z } from "zod/v4";
+
+const updateObligationSchema = insertObligationSchema.partial().extend({
+  status: z.enum(["active", "expired", "completed", "paused"]).optional(),
+  dueDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "dueDate must be YYYY-MM-DD").optional(),
+});
+
+const completeObligationSchema = z.object({
+  notes: z.string().max(5000).optional(),
+});
 
 const router = Router();
 
@@ -215,40 +225,43 @@ router.post("/", requireAuth, async (req: Request, res: Response) => {
   const userId = (req as AuthenticatedRequest).userId;
 
   try {
-    const body = req.body;
-
-    if (!body.workspaceId || !body.title || !body.category || !body.dueDate) {
-      res.status(400).json({ error: "workspaceId, title, category, dueDate are required" });
-      return;
+    const body = req.body as Record<string, unknown>;
+    const workspaceId = typeof body.workspaceId === "number" ? body.workspaceId : parseInt(String(body.workspaceId));
+    if (!workspaceId || isNaN(workspaceId)) {
+      return void res.status(400).json({ error: "workspaceId is required and must be a number" });
+    }
+    if (!body.title || !body.category || !body.dueDate) {
+      return void res.status(400).json({ error: "title, category and dueDate are required" });
     }
 
-    const workspaceId = parseInt(String(body.workspaceId));
     const member = await isMember(workspaceId, userId);
     if (!member) {
       res.status(403).json({ error: "Forbidden" });
       return;
     }
 
+    type NewObligation = typeof obligationsTable.$inferInsert;
+    const insertValues: NewObligation = {
+      workspaceId,
+      title: String(body.title).slice(0, 500),
+      description: body.description ? String(body.description).slice(0, 2000) : null,
+      category: String(body.category).slice(0, 100),
+      dueDate: String(body.dueDate),
+      renewalFrequency: (body.renewalFrequency as NewObligation["renewalFrequency"]) ?? null,
+      customFrequencyDays: body.customFrequencyDays ? Number(body.customFrequencyDays) : null,
+      ownerClerkId: body.ownerClerkId ? String(body.ownerClerkId) : null,
+      ownerName: body.ownerName ? String(body.ownerName) : null,
+      ownerEmail: body.ownerEmail ? String(body.ownerEmail) : null,
+      backupOwnerClerkId: body.backupOwnerClerkId ? String(body.backupOwnerClerkId) : null,
+      backupOwnerName: body.backupOwnerName ? String(body.backupOwnerName) : null,
+      backupOwnerEmail: body.backupOwnerEmail ? String(body.backupOwnerEmail) : null,
+      notes: body.notes ? String(body.notes).slice(0, 5000) : null,
+      tags: Array.isArray(body.tags) ? (body.tags as unknown[]).slice(0, 20).map(String) : [],
+      status: "active",
+    };
     const [obligation] = await db
       .insert(obligationsTable)
-      .values({
-        workspaceId,
-        title: String(body.title).slice(0, 500),
-        description: body.description ? String(body.description).slice(0, 2000) : null,
-        category: String(body.category).slice(0, 100),
-        dueDate: String(body.dueDate),
-        renewalFrequency: body.renewalFrequency || null,
-        customFrequencyDays: body.customFrequencyDays ? parseInt(body.customFrequencyDays) : null,
-        ownerClerkId: body.ownerClerkId || null,
-        ownerName: body.ownerName || null,
-        ownerEmail: body.ownerEmail || null,
-        backupOwnerClerkId: body.backupOwnerClerkId || null,
-        backupOwnerName: body.backupOwnerName || null,
-        backupOwnerEmail: body.backupOwnerEmail || null,
-        notes: body.notes ? String(body.notes).slice(0, 5000) : null,
-        tags: Array.isArray(body.tags) ? body.tags.slice(0, 20).map(String) : [],
-        status: "active",
-      })
+      .values(insertValues)
       .returning();
 
     await db.insert(auditLogsTable).values({
@@ -475,7 +488,7 @@ router.post("/import/csv", requireAuth, async (req: Request, res: Response) => {
         });
 
         imported++;
-      } catch (rowErr) {
+      } catch {
         errors.push(`Failed to import: ${mapped.title}`);
         skipped++;
       }
@@ -514,7 +527,18 @@ router.put("/:obligationId", requireAuth, async (req: Request, res: Response) =>
     const existing = await getObligationAndCheckAccess(id, userId, res);
     if (!existing) return;
 
-    const body = req.body;
+    const parseResult = updateObligationSchema.safeParse(req.body);
+    if (!parseResult.success) {
+      return void res.status(400).json({
+        error: "Validation failed",
+        issues: parseResult.error.issues.map((i) => ({
+          path: i.path.join("."),
+          message: i.message,
+        })),
+      });
+    }
+    const updates = parseResult.data;
+    const body = updates;
     const [obligation] = await db
       .update(obligationsTable)
       .set({
@@ -592,7 +616,11 @@ router.post("/:obligationId/complete", requireAuth, async (req: Request, res: Re
     const existing = await getObligationAndCheckAccess(id, userId, res);
     if (!existing) return;
 
-    const { notes } = req.body || {};
+    const parseResult = completeObligationSchema.safeParse(req.body || {});
+    if (!parseResult.success) {
+      return void res.status(400).json({ error: "Validation failed" });
+    }
+    const { notes } = parseResult.data;
     const [obligation] = await db
       .update(obligationsTable)
       .set({

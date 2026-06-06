@@ -99,10 +99,26 @@ router.post("/", requireAuth, async (req: Request, res: Response) => {
         .replace(/[^a-z0-9-]/g, "")
         .slice(0, 80);
 
-    const [workspace] = await db
+    let workspace: typeof workspacesTable.$inferSelect | undefined;
+    const result = await db
       .insert(workspacesTable)
       .values({ name: String(name).slice(0, 200), slug: finalSlug })
+      .onConflictDoNothing()
       .returning();
+
+    if (result.length > 0) {
+      workspace = result[0];
+    } else {
+      // Slug collision
+      const [existing] = await db
+        .select()
+        .from(workspacesTable)
+        .where(eq(workspacesTable.slug, finalSlug));
+      if (existing) {
+        return void res.status(409).json({ error: "Workspace slug already exists" });
+      }
+      return void res.status(500).json({ error: "Failed to create workspace" });
+    }
 
     await db.insert(workspaceMembersTable).values({
       workspaceId: workspace.id,

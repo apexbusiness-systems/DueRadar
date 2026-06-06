@@ -53,6 +53,9 @@ export const obligationsTable = pgTable("obligations", {
   healthScore: integer("health_score").notNull().default(0),
 }, (table) => [
   index("idx_obligations_health_score").on(table.healthScore),
+  index("idx_obligations_workspace_status").on(table.workspaceId, table.status),
+  index("idx_obligations_workspace_due").on(table.workspaceId, table.dueDate),
+  index("idx_obligations_workspace_id").on(table.workspaceId),
 ]);
 
 export const insertObligationSchema = createInsertSchema(obligationsTable).omit(

@@ -113,7 +113,7 @@ app.use(
     verify: (req: RawBodyRequest, _res, buf) => {
       // Capture raw bytes for HMAC verification on internal FlowC routes only.
       const url = (req as Request).originalUrl ?? (req as Request).url ?? "";
-      if (url.startsWith("/api/internal/flowc")) {
+      if (url.startsWith("/api/internal/flowc") || url.startsWith("/api/webhooks/clerk")) {
         req.rawBody = buf;
       }
     },
@@ -138,8 +138,34 @@ const importLimiter = rateLimit({
   message: { error: "Too many import requests, please slow down" },
 });
 
+// Global API rate limiter — 300 req/min per IP across all endpoints
+const globalApiLimiter = rateLimit({
+  windowMs: 60 * 1000,
+  max: 300,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: "Too many requests, please slow down" },
+  keyGenerator: (req) => {
+    // Trust X-Forwarded-For from Cloudflare/Fly proxy
+    const forwarded = req.headers["x-forwarded-for"];
+    const ip = Array.isArray(forwarded) ? forwarded[0] : forwarded?.split(",")[0];
+    return (ip ?? req.ip ?? "unknown").trim();
+  },
+});
+
+// Auth-specific limiter — stricter window for auth-adjacent endpoints
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 50,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: "Too many authentication attempts, please try again later" },
+});
+
+app.use("/api", globalApiLimiter);
 app.use("/api/me/seed", seedLimiter);
 app.use("/api/obligations/import", importLimiter);
+app.use("/api/workspaces", authLimiter);
 
 app.use(
   clerkMiddleware((req) => ({

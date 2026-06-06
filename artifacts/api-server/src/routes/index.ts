@@ -10,6 +10,8 @@ import auditLogsRouter from "./auditLogs";
 import meRouter from "./me";
 import internalFlowcRouter from "./internalFlowc";
 
+import webhooksRouter from "./webhooks";
+
 const router: IRouter = Router();
 
 router.use(healthRouter);
@@ -20,6 +22,7 @@ router.use("/obligations/:obligationId/reminder-rules", remindersRouter);
 router.use("/delivery-history", deliveryRouter);
 router.use("/audit-logs", auditLogsRouter);
 router.use("/me", meRouter);
+router.use("/webhooks", webhooksRouter);
 // No Clerk requireAuth — HMAC signature on x-flowc-signature header secures this route.
 router.use("/internal/flowc", internalFlowcRouter);
 
