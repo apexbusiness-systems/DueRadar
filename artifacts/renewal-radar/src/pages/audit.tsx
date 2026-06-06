@@ -30,7 +30,7 @@ export default function AuditPage() {
       },
     },
   );
-  const logs = auditQuery.data ?? [];
+  const logs = Array.isArray(auditQuery.data) ? auditQuery.data : [];
 
   return (
     <AppLayout>

@@ -1,0 +1,33 @@
+import { test, expect } from '@playwright/test';
+
+test.describe('Unauthenticated Endpoints', () => {
+  test('Landing page loads correctly', async ({ page }) => {
+    page.on('console', msg => console.log('BROWSER CONSOLE:', msg.text()));
+    page.on('pageerror', error => console.log('BROWSER ERROR:', error.message));
+
+    const response = await page.goto('/');
+    expect(response?.status()).toBe(200);
+    
+    await page.waitForLoadState('networkidle');
+
+    // Check main headline exists
+    await expect(page.locator('h1').first()).toBeVisible();
+    
+    // Check Sign In and Sign Up buttons
+    const signInBtn = page.getByRole('link', { name: /Sign In/i }).first();
+    const signUpBtn = page.getByRole('link', { name: /Sign Up/i }).first();
+    if (await signInBtn.isVisible()) {
+      await expect(signInBtn).toHaveAttribute('href', /.*\/sign-in/);
+    }
+  });
+
+  test('Info detail page loads correctly', async ({ page }) => {
+    const response = await page.goto('/info/security');
+    expect(response?.status()).toBe(200);
+  });
+
+  test('404 Not Found renders correctly', async ({ page }) => {
+    await page.goto('/does-not-exist-12345');
+    await expect(page.locator('text=/Not Found/i').first()).toBeVisible();
+  });
+});

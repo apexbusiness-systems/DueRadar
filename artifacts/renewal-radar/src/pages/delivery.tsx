@@ -26,7 +26,7 @@ export default function DeliveryPage() {
       },
     },
   );
-  const records = deliveryQuery.data ?? [];
+  const records = Array.isArray(deliveryQuery.data) ? deliveryQuery.data : [];
 
   return (
     <AppLayout>

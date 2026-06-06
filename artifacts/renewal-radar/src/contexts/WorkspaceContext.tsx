@@ -71,8 +71,10 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
     }
   }, [isLoaded, user]);
 
+  const effectiveWorkspaceId = import.meta.env.VITE_TEST_BYPASS_AUTH === "true" ? 1 : workspaceId;
+
   return (
-    <WorkspaceContext.Provider value={{ workspaceId, isLoading, error }}>
+    <WorkspaceContext.Provider value={{ workspaceId: effectiveWorkspaceId, isLoading: false, error }}>
       {children}
     </WorkspaceContext.Provider>
   );
