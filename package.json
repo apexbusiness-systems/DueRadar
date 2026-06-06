@@ -28,6 +28,7 @@
     "testcontainers": "^11.14.0",
     "typescript": "~5.9.2",
     "typescript-eslint": "^8.60.1",
-    "vitest": "^4.1.5"
+    "vitest": "^4.1.5",
+    "wrangler": "^4.98.0"
   }
 }
