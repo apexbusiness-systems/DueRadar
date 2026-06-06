@@ -5,6 +5,7 @@ primary_region = "iad"
 [env]
   NODE_ENV = "production"
   PORT     = "3001"
+  ALLOWED_ORIGINS = "https://dueradar.icu"
 
 # Secrets set via: flyctl secrets set KEY=value
 # Required: DATABASE_URL, CLERK_SECRET_KEY, CLERK_PUBLISHABLE_KEY,
