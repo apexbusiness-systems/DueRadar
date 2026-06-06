@@ -20,7 +20,7 @@ COPY lib/api-spec/package.json            lib/api-spec/package.json
 COPY lib/api-client-react/package.json    lib/api-client-react/package.json
 COPY artifacts/api-server/package.json    artifacts/api-server/package.json
 COPY artifacts/mockup-sandbox/package.json artifacts/mockup-sandbox/package.json
-COPY artifacts/renewal-radar/package.json artifacts/renewal-radar/package.json
+COPY artifacts/frontend/package.json artifacts/frontend/package.json
 COPY scripts/package.json                 scripts/package.json
 
 RUN pnpm install --frozen-lockfile

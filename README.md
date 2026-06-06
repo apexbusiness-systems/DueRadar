@@ -34,7 +34,7 @@ Your business deadline warning system. DueRadar tracks contracts, permits, insur
 |-----|-----|
 | Legacy name | Canonical name |
 |---|---|
-| RiskRadar | DueRadar |
+| DueRadar | DueRadar |
 | Risk Register | Due Register |
 | Risk Record | Due Record |
 | Risk Intake | Due Intake |
@@ -110,7 +110,7 @@ Copy `.env.example` to `.env` and fill in the values. The API server runs on Fly
 ```
 artifacts/
   api-server/        Express 5 + Clerk auth + Drizzle ORM + reminder scheduler
-  renewal-radar/     DueRadar frontend (React 19 + Vite 7 + Tailwind v4 + Clerk + TanStack Query + wouter)
+  frontend/     DueRadar frontend (React 19 + Vite 7 + Tailwind v4 + Clerk + TanStack Query + wouter)
 
 lib/
   api-spec/          OpenAPI spec (openapi.yaml) + Orval codegen config
@@ -168,7 +168,7 @@ pnpm --filter @workspace/db run push
 pnpm --filter @workspace/api-server run dev
 
 # 5. Start the frontend
-PORT=3000 BASE_PATH="/" pnpm --filter @workspace/renewal-radar run dev
+PORT=3000 BASE_PATH="/" pnpm --filter @workspace/frontend run dev
 ```
 
 ## Key Commands
@@ -179,7 +179,7 @@ pnpm --filter @workspace/api-spec codegen  # Regenerate API hooks from OpenAPI
 pnpm --filter @workspace/db run push       # Push schema to dev DB
 pnpm --filter @workspace/db run generate    # Generate checked-in SQL migrations
 pnpm --filter @workspace/db run migrate    # Apply checked-in migrations
-pnpm --filter @workspace/renewal-radar run build  # Build production frontend
+pnpm --filter @workspace/frontend run build  # Build production frontend
 ```
 
 ## Migration Policy

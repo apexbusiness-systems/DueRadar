@@ -1,7 +1,7 @@
 import { Link } from "wouter";
-import { OrbitalRadar } from "@/components/risk-radar/OrbitalRadar";
-import { PageHead, BtnAmber, BtnGhost, BtnResolve, BtnGlass } from "@/components/risk-radar/Chrome";
-import { RR_DATA } from "@/components/risk-radar/data";
+import { OrbitalRadar } from "@/components/core/OrbitalRadar";
+import { PageHead, BtnAmber, BtnGhost, BtnResolve, BtnGlass } from "@/components/core/Chrome";
+import { RR_DATA } from "@/components/core/data";
 
 /* ── Most Urgent Due Item card ── */
 function HighestRiskNow({ onResolve }: { onResolve: () => void }) {

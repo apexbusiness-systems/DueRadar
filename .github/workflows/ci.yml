@@ -91,13 +91,13 @@ jobs:
           # BASE_PATH env var. Prevents MSYS2 path corruption on Windows builds.
           NODE_ENV: production
           VITE_CLERK_PUBLISHABLE_KEY: ${{ secrets.VITE_CLERK_PUBLISHABLE_KEY }}
-        run: pnpm --filter @workspace/renewal-radar run build
+        run: pnpm --filter @workspace/frontend run build
 
       - name: Verify dist — gate on MSYS path corruption
         run: |
           echo "=== dist/public/index.html asset paths ==="
-          grep -E 'src=|href=' artifacts/renewal-radar/dist/public/index.html
-          if grep -q "Program Files" artifacts/renewal-radar/dist/public/index.html; then
+          grep -E 'src=|href=' artifacts/frontend/dist/public/index.html
+          if grep -q "Program Files" artifacts/frontend/dist/public/index.html; then
             echo "CRITICAL: MSYS path corruption detected — aborting deploy"
             exit 1
           fi
@@ -113,7 +113,7 @@ jobs:
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
         run: |
           pnpm add -w wrangler
-          pnpm exec wrangler pages deploy artifacts/renewal-radar/dist/public \
+          pnpm exec wrangler pages deploy artifacts/frontend/dist/public \
             --project-name=dueradar \
             --branch=main \
             --commit-dirty=true
