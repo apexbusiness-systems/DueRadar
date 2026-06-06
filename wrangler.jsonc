@@ -1,5 +1,10 @@
 {
   "name": "dueradar",
   "compatibility_date": "2026-05-13",
-  "pages_build_output_dir": "./artifacts/renewal-radar/dist/public"
+  "pages_build_output_dir": "./artifacts/renewal-radar/dist/public",
+  "build": {
+    "command": "pnpm --filter @workspace/renewal-radar run build",
+    "cwd": ".",
+    "watch_dir": "artifacts/renewal-radar/src"
+  }
 }

@@ -5,6 +5,8 @@ import {
   text,
   timestamp,
   pgEnum,
+  uniqueIndex,
+  index,
 } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod/v4";
@@ -26,7 +28,14 @@ export const workspaceMembersTable = pgTable("workspace_members", {
   name: text("name"),
   role: memberRoleEnum("role").notNull().default("member"),
   joinedAt: timestamp("joined_at").defaultNow().notNull(),
-});
+}, (table) => [
+  uniqueIndex("idx_workspace_members_unique").on(
+    table.workspaceId,
+    table.clerkUserId
+  ),
+  index("idx_workspace_members_workspace_id").on(table.workspaceId),
+  index("idx_workspace_members_email").on(table.workspaceId, table.email),
+]);
 
 export const insertWorkspaceMemberSchema = createInsertSchema(
   workspaceMembersTable,

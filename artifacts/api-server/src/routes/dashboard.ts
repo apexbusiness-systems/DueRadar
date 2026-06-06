@@ -3,7 +3,6 @@ import { db } from "@workspace/db";
 import {
   obligationsTable,
   deliveryHistoryTable,
-  workspaceMembersTable,
   reminderRulesTable,
 } from "@workspace/db";
 import { eq, and, gte, lte, sql, isNull, notExists, inArray } from "drizzle-orm";
@@ -15,21 +14,6 @@ import { computeHealthScore } from "../lib/healthScore";
 const router = Router();
 
 // ── Membership guard ─────────────────────────────────────────────────────────
-
-async function isMember(workspaceId: number, clerkUserId: string): Promise<boolean> {
-  const [row] = await db
-    .select({ id: workspaceMembersTable.id })
-    .from(workspaceMembersTable)
-    .where(
-      and(
-        eq(workspaceMembersTable.workspaceId, workspaceId),
-        eq(workspaceMembersTable.clerkUserId, clerkUserId),
-      ),
-    )
-    .limit(1);
-  return !!row;
-}
-
 // ── GET /api/dashboard/metrics ───────────────────────────────────────────────
 
 router.get("/metrics", requireAuth, async (req: Request, res: Response) => {

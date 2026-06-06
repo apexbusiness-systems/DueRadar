@@ -1,5 +1,5 @@
 import { useRoute, Link } from "wouter";
-import { RadarMark, BtnAmber, BtnGhost } from "@/components/risk-radar/Chrome";
+import { RadarMark } from "@/components/risk-radar/Chrome";
 import { useState } from "react";
 
 // Beautiful custom SVGs for the categories

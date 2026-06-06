@@ -6,6 +6,7 @@ import {
   timestamp,
   boolean,
   pgEnum,
+  index,
 } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod/v4";
@@ -35,7 +36,12 @@ export const reminderRulesTable = pgTable("reminder_rules", {
   isActive: boolean("is_active").notNull().default(true),
   lastTriggeredAt: timestamp("last_triggered_at"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
-});
+}, (table) => [
+  index("idx_reminder_rules_obligation_active").on(
+    table.obligationId,
+    table.isActive
+  ),
+]);
 
 export const insertReminderRuleSchema = createInsertSchema(
   reminderRulesTable,

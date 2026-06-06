@@ -74,7 +74,6 @@ export async function processOutbox(): Promise<void> {
 
   try {
     await db.transaction(async (tx) => {
-      const now = new Date();
       const claimed = await tx.execute<{
         id: number;
         receipt_id: number;
@@ -86,7 +85,7 @@ export async function processOutbox(): Promise<void> {
       }>(sql`
         SELECT id, receipt_id, target_kind, target_url, event_name, payload, attempt_count
         FROM integration_outbox
-        WHERE status = 'pending' AND next_attempt_at <= ${now}
+        WHERE status = 'pending' AND next_attempt_at <= NOW()
         ORDER BY next_attempt_at ASC
         LIMIT ${BATCH_SIZE}
         FOR UPDATE SKIP LOCKED

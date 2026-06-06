@@ -197,3 +197,32 @@ pnpm --filter @workspace/renewal-radar run build  # Build production frontend
 
 - Seeded demo records use clearly fake identifiers (`example.com` email domains).
 - Do not import real customer data into public demo environments.
+
+## Fly.io Runtime Secrets
+
+```bash
+flyctl secrets set \
+  DATABASE_URL="postgresql://postgres:<password>@<host>:6543/postgres?sslmode=require" \
+  CLERK_SECRET_KEY="sk_live_xxx" \
+  CLERK_PUBLISHABLE_KEY="pk_live_xxx" \
+  ALLOWED_ORIGINS="https://dueradar.icu,https://www.dueradar.icu" \
+  ENABLE_REMINDER_SCHEDULER="true" \
+  SMTP_HOST="smtp.sendgrid.net" \
+  SMTP_PORT="587" \
+  SMTP_SECURE="false" \
+  SMTP_USER="apikey" \
+  SMTP_PASS="<sendgrid_api_key>" \
+  SMTP_FROM="noreply@dueradar.icu" \
+  SENTRY_DSN="https://xxx@sentry.io/xxx" \
+  CLERK_WEBHOOK_SECRET="whsec_xxx"
+```
+
+## CI/CD
+
+```
+CLOUDFLARE_API_TOKEN     — Cloudflare API token (Pages deploy)
+CLOUDFLARE_ACCOUNT_ID    — Cloudflare account ID
+DATABASE_URL             — PostgreSQL connection string (migrations job)
+FLY_API_TOKEN            — Fly.io deploy token
+VITE_CLERK_PUBLISHABLE_KEY — Clerk publishable key (frontend build)
+```

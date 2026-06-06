@@ -1,4 +1,4 @@
-import { useRef, useEffect, useState, useCallback } from "react";
+import { useRef, useEffect, useCallback } from "react";
 import { Link } from "wouter";
 import { RadarMark, BtnAmber, BtnGhost } from "@/components/risk-radar/Chrome";
 import { ContractsIcon, PermitsIcon, InsuranceIcon, ComplianceIcon, DeadlinesIcon, ExposureIcon } from "@/pages/info-detail";
@@ -285,8 +285,6 @@ const STEPS = [
 ];
 
 export default function LandingPage({ onEnter }: { onEnter?: () => void }) {
-  const [emailInput, setEmailInput] = useState("");
-
   return (
     <div className="min-h-screen overflow-x-hidden flex flex-col" style={{ background: "#050709" }}>
       {/* Sticky Premium Navbar */}
