@@ -278,10 +278,10 @@ const CATEGORIES = [
 ];
 
 const STEPS = [
-  { n: "01", label: "Detect", desc: "DueRadar surfaces what's approaching before it's an emergency.", color: "#F5A623" },
-  { n: "02", label: "Assign", desc: "Every risk gets an owner. Every owner gets a reminder schedule.", color: "#00C8F0" },
-  { n: "03", label: "Act", desc: "One-click resolution paths. Upload proof, assign backup, set escalation.", color: "#00E676" },
-  { n: "04", label: "Protect", desc: "Cleared risks become Protected. Coverage rises. Stress falls.", color: "#00E676" },
+  { n: "01", label: "Detect", desc: "We spot upcoming deadlines before they turn into emergencies.", color: "#F5A623" },
+  { n: "02", label: "Assign", desc: "Assign ownership and set automated reminders for every critical date.", color: "#00C8F0" },
+  { n: "03", label: "Act", desc: "Resolve issues quickly. Upload documents and manage escalations easily.", color: "#00E676" },
+  { n: "04", label: "Protect", desc: "Track your protected assets and reduce operational stress.", color: "#00E676" },
 ];
 
 export default function LandingPage({ onEnter }: { onEnter?: () => void }) {
@@ -341,14 +341,14 @@ export default function LandingPage({ onEnter }: { onEnter?: () => void }) {
           <div className="inline-flex items-center gap-2 bg-[rgba(245,166,35,.08)] border border-[rgba(245,166,35,.22)] rounded-full px-3.5 py-1.5 mb-8 w-fit shadow-[0_0_15px_rgba(245,166,35,.06)]">
             <span className="w-1.5 h-1.5 rounded-full bg-[#F5A623] animate-pulse" />
             <span className="text-[10px] font-bold text-[#FFB84D] uppercase tracking-[0.16em]">
-              Active Risk Radar Network
+              Live Deadline Tracking
             </span>
           </div>
           <h1 className="text-[68px] font-bold tracking-[-0.04em] leading-none mb-0 text-white">
-            Deadlines Don’t Warn You. DueRadar Does.
+            Never miss another deadline.
           </h1>
           <p className="text-[17px] font-medium text-[#CBD5E1] mt-5 mb-9 leading-relaxed max-w-[520px]">
-            Catch renewals, filings, permits, contracts, and compliance dates before they turn into expensive surprises.
+            Track your contracts, permits, and compliance dates before they become expensive problems.
           </p>
           <div className="flex gap-3 flex-wrap">
             <BtnAmber onClick={onEnter}>Open Command Center →</BtnAmber>
@@ -357,20 +357,20 @@ export default function LandingPage({ onEnter }: { onEnter?: () => void }) {
         </div>
       </div>
 
-      {/* What DueRadar Tracks — Bento Grid */}
+      {/* What DueRadar Tracks - Bento Grid */}
       <section id="tracks" className="py-24 px-6 sm:px-12 md:px-20" style={{ background: "#0A0E18", borderTop: "1px solid rgba(255,255,255,.07)" }}>
         <div className="max-w-[1040px] mx-auto">
           <div className="text-[11px] font-bold text-[#F5A623] uppercase tracking-[0.22em] mb-4">
-            What DueRadar Tracks
+            Our Coverage
           </div>
           <h2 className="text-3xl sm:text-4xl md:text-[42px] font-bold tracking-[-0.03em] mb-14 max-w-[560px] leading-[1.08] text-[#F0F4F8]">
-            Every business deadline.<br />One warning system.
+            All your business deadlines<br />in one place.
           </h2>
 
           {/* Bento grid: hero card (CONTRACTS) + 5 supporting */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
 
-            {/* Hero card — CONTRACTS */}
+            {/* Hero card - CONTRACTS */}
             <Link href="/info/contracts" className="lg:col-span-5 lg:row-span-2 block">
               <div
                 className="flex flex-col justify-between p-8 group cursor-pointer transition-all duration-300 hover:-translate-y-1 h-full"
@@ -503,7 +503,7 @@ export default function LandingPage({ onEnter }: { onEnter?: () => void }) {
       <section id="workflow" className="py-24 px-6 sm:px-12 md:px-20" style={{ background: "#050709" }}>
         <div className="max-w-[960px] mx-auto">
           <div className="text-[11px] font-bold text-[#00C8F0] uppercase tracking-[0.22em] mb-4">
-            Daily Command Loop
+            How It Works
           </div>
           <h2 className="text-3xl sm:text-4xl md:text-[42px] font-bold tracking-[-0.03em] mb-14 max-w-[520px] leading-[1.08] text-[#F0F4F8]">
             Four steps to a<br />protected business.
@@ -511,7 +511,7 @@ export default function LandingPage({ onEnter }: { onEnter?: () => void }) {
 
           {/* Steps with connector line on desktop */}
           <div className="relative grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-            {/* Connector line — desktop only */}
+            {/* Connector line for desktop */}
             <div
               className="absolute hidden lg:block top-[44px] left-[calc(12.5%+24px)] right-[calc(12.5%+24px)] h-px"
               style={{ background: "linear-gradient(90deg, rgba(245,166,35,.3) 0%, rgba(0,200,240,.3) 50%, rgba(0,230,118,.3) 100%)" }}
@@ -572,11 +572,11 @@ export default function LandingPage({ onEnter }: { onEnter?: () => void }) {
           </div>
 
           <h2 className="text-[40px] sm:text-[52px] font-black tracking-[-0.04em] mb-4 text-[#F0F4F8] leading-[1.0]">
-            Your deadlines won't<br /><span className="text-[#F5A623]">wait for you.</span>
+            Deadlines wait for<br /><span className="text-[#F5A623]">no one.</span>
           </h2>
           <p className="text-[16px] sm:text-[18px] text-[#8898A8] mb-10 leading-relaxed">
-            Every missed deadline costs money, compliance, or leverage.<br />
-            DueRadar shows the most dangerous one first — always.
+            Missing a deadline can cost you money, compliance, or negotiating power.<br />
+            DueRadar highlights your most urgent items first.
           </p>
 
           <Link href="/sign-up">

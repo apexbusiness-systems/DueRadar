@@ -94,7 +94,7 @@ export default function AuditPage() {
                     </div>
                     <div className="pr-4">
                       <span className="text-sm text-slate-700 font-medium truncate block max-w-40">
-                        {log.obligationTitle ?? (log.obligationId ? `#${log.obligationId}` : "—")}
+                        {log.obligationTitle ?? (log.obligationId ? `#${log.obligationId}` : "-")}
                       </span>
                     </div>
                     <div>

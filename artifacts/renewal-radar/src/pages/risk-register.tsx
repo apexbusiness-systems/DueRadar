@@ -216,7 +216,7 @@ export default function RiskRegisterPage() {
                           color: "#4A5568",
                         }}
                       >
-                        —
+                        -
                       </span>
                       <span className="text-[#FF4040] text-xs">Unassigned</span>
                     </>

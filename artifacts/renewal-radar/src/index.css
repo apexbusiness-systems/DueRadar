@@ -1,5 +1,5 @@
 /* ══════════════════════════════════════════════════════════
-   DueRadar — Orbital Command System
+   DueRadar - Orbital Command System
    Visual anchor: deep obsidian · amber beam · cyan orbital rings
    Space Grotesk globally · tabular numerals on metrics
  ══════════════════════════════════════════════════════════ */
@@ -103,14 +103,14 @@
   --rr-glass:       rgba(255,255,255,.04);
   --rr-glass-2:     rgba(255,255,255,.07);
 
-  /* ── Amber — primary action / radar beam ── */
+  /* ── Amber - primary action / radar beam ── */
   --rr-amber:       #F5A623;
   --rr-amber-2:     #D4850A;
   --rr-amber-glow:  rgba(245,166,35,.18);
   --rr-amber-edge:  rgba(245,166,35,.35);
   --rr-amber-text:  #FFB84D;
 
-  /* ── Cyan — orbital rings / system intelligence ── */
+  /* ── Cyan - orbital rings / system intelligence ── */
   --rr-cyan:        #00C8F0;
   --rr-cyan-2:      #0096C0;
   --rr-cyan-glow:   rgba(0,200,240,.12);

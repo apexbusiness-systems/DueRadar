@@ -304,7 +304,7 @@ function AppRouter() {
         <WorkspaceProvider>
           <TooltipProvider>
             <Switch>
-              {/* Landing — no shell */}
+              {/* Landing - no shell */}
               <Route path="/" component={HomeRedirect} />
               <Route path="/sign-in/*?" component={SignInPage} />
               <Route path="/sign-up/*?" component={SignUpPage} />

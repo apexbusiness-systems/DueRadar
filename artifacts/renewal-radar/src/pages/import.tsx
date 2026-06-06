@@ -258,10 +258,10 @@ export default function ImportPage() {
                       }
                     >
                       <SelectTrigger className="flex-1 rounded-xl border-slate-200 bg-slate-50 h-9" data-testid={`select-map-${field.value}`}>
-                        <SelectValue placeholder="— Not mapped —" />
+                        <SelectValue placeholder="- Not mapped -" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="__none__">— Not mapped —</SelectItem>
+                        <SelectItem value="__none__">- Not mapped -</SelectItem>
                         {headers.map((h) => <SelectItem key={h} value={h}>{h}</SelectItem>)}
                       </SelectContent>
                     </Select>
@@ -321,7 +321,7 @@ export default function ImportPage() {
                       <tr key={i} className={cn("hover:bg-slate-50", i < previewRows.length - 1 ? "border-b border-slate-100" : "")}>
                         {OBLIGATION_FIELDS.filter((f) => columnMapping[f.value]).map((f) => (
                           <td key={f.value} className="px-3 py-2 text-slate-600 truncate max-w-32">
-                            {row[columnMapping[f.value]] ?? row[f.value] ?? "—"}
+                            {row[columnMapping[f.value]] ?? row[f.value] ?? "-"}
                           </td>
                         ))}
                       </tr>
