@@ -1,8 +1,8 @@
 kind = "web"
 previewPath = "/"
-title = "RiskRadar"
+title = "DueRadar"
 version = "1.0.0"
-id = "artifacts/renewal-radar"
+id = "artifacts/frontend"
 router = "path"
 
 [[integratedSkills]]
@@ -15,11 +15,11 @@ paths = [ "/" ]
 localPort = 23791
 
 [services.development]
-run = "pnpm --filter @workspace/renewal-radar run dev"
+run = "pnpm --filter @workspace/frontend run dev"
 
 [services.production]
-build = [ "pnpm", "--filter", "@workspace/renewal-radar", "run", "build" ]
-publicDir = "artifacts/renewal-radar/dist/public"
+build = [ "pnpm", "--filter", "@workspace/frontend", "run", "build" ]
+publicDir = "artifacts/frontend/dist/public"
 serve = "static"
 
 [[services.production.rewrites]]

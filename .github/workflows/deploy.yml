@@ -70,7 +70,7 @@ jobs:
           cache: "pnpm"
       - run: pnpm install --frozen-lockfile
       - name: Build frontend
-        run: pnpm --filter @workspace/renewal-radar run build
+        run: pnpm --filter @workspace/frontend run build
         env:
           VITE_CLERK_PUBLISHABLE_KEY: ${{ secrets.VITE_CLERK_PUBLISHABLE_KEY }}
           VITE_CLERK_PROXY_URL: "https://dueradar.icu/api/clerk"
@@ -80,4 +80,4 @@ jobs:
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy artifacts/renewal-radar/dist/public --project-name=dueradar
+          command: pages deploy artifacts/frontend/dist/public --project-name=dueradar

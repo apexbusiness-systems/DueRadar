@@ -1,4 +1,4 @@
-import { PageHead, BtnAmber, BtnGhost } from "@/components/risk-radar/Chrome";
+import { PageHead, BtnAmber, BtnGhost } from "@/components/core/Chrome";
 
 export default function RiskIntakePage() {
   return (

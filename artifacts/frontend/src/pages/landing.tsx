@@ -1,6 +1,6 @@
 import { useRef, useEffect, useCallback } from "react";
 import { Link } from "wouter";
-import { RadarMark, BtnAmber, BtnGhost } from "@/components/risk-radar/Chrome";
+import { RadarMark, BtnAmber, BtnGhost } from "@/components/core/Chrome";
 import { ContractsIcon, PermitsIcon, InsuranceIcon, ComplianceIcon, DeadlinesIcon, ExposureIcon } from "@/pages/info-detail";
 
 /* ── Orbiting category labels (DOM elements, not canvas) ── */

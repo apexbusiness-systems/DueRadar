@@ -1,6 +1,6 @@
 import { Link } from "wouter";
-import { PageHead, BtnGhost, BtnResolve } from "@/components/risk-radar/Chrome";
-import { RR_DATA } from "@/components/risk-radar/data";
+import { PageHead, BtnGhost, BtnResolve } from "@/components/core/Chrome";
+import { RR_DATA } from "@/components/core/data";
 
 export default function RiskRecordPage() {
   const r = RR_DATA.record;

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link } from "wouter";
-import { PageHead, BtnAmber, BtnGhost } from "@/components/risk-radar/Chrome";
-import { RR_DATA } from "@/components/risk-radar/data";
+import { PageHead, BtnAmber, BtnGhost } from "@/components/core/Chrome";
+import { RR_DATA } from "@/components/core/data";
 
 /* ── Helper functions ── */
 const ownerName = (o: string | null) =>

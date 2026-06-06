@@ -10,13 +10,13 @@
 **/*.tsbuildinfo
 
 # Frontend source — not needed for the API server build
-artifacts/renewal-radar/src
-artifacts/renewal-radar/public
-artifacts/renewal-radar/index.html
-artifacts/renewal-radar/vite.config.ts
-artifacts/renewal-radar/tsconfig.json
-artifacts/renewal-radar/components.json
-artifacts/renewal-radar/.replit-artifact
+artifacts/frontend/src
+artifacts/frontend/public
+artifacts/frontend/index.html
+artifacts/frontend/vite.config.ts
+artifacts/frontend/tsconfig.json
+artifacts/frontend/components.json
+artifacts/frontend/.replit-artifact
 
 # Secrets and local config
 .env
