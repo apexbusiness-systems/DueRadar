@@ -69,7 +69,7 @@ export default function WorkspacePage() {
     );
   };
 
-  const members = membersQuery.data ?? [];
+  const members = Array.isArray(membersQuery.data) ? membersQuery.data : [];
   const currentUserClerkId = user?.id;
 
   return (
@@ -104,7 +104,7 @@ export default function WorkspacePage() {
               <div className="flex items-center gap-5">
                 <div className="w-14 h-14 bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-lg">
                   <span className="text-white font-black text-xl">
-                    {workspace.name[0].toUpperCase()}
+                    {(workspace.name?.[0] ?? '?').toUpperCase()}
                   </span>
                 </div>
                 <div className="flex-1">
@@ -179,7 +179,7 @@ export default function WorkspacePage() {
                 const roleConf = ROLE_CONFIG[member.role] ?? ROLE_CONFIG.member;
                 const RoleIcon = roleConf.icon;
                 const isCurrentUser = member.clerkUserId === currentUserClerkId;
-                const initials = (member.name ?? member.email)[0].toUpperCase();
+                const initials = ((member.name ?? member.email ?? '?')[0] ?? '?').toUpperCase();
 
                 return (
                   <div
