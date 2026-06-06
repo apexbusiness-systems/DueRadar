@@ -19,11 +19,9 @@ import DeliveryPage from "@/pages/delivery";
 import AuditPage from "@/pages/audit";
 import WorkspacePage from "@/pages/workspace";
 import NotFound from "@/pages/not-found";
-import ObligationNewPage from "@/pages/obligation-new";
-import ObligationsPage from "@/pages/obligations";
-import ObligationDetailPage from "@/pages/obligation-detail";
 
-const clerkPubKey = (import.meta.env.VITE_CLERK_PUBLISHABLE_KEY as string) || "pk_test_YWJvdev-c3VuYmVhbS0yMS5jbGVyay5hY2NvdW50cy5kZXYk";
+
+const clerkPubKey = (import.meta.env.VITE_CLERK_PUBLISHABLE_KEY as string) || "pk_test_YWJvdmUtc3VuYmVhbS0yMS5jbGVyay5hY2NvdW50cy5kZXYk";
 
 const clerkProxyUrl = import.meta.env.VITE_CLERK_PROXY_URL;
 const basePath = import.meta.env.BASE_URL.replace(/"/, "");
@@ -272,6 +270,10 @@ function ShellLayout({ children }: { children: React.ReactNode }) {
   );
 }
 
+import * as Sentry from "@sentry/react";
+
+const SentrySwitch = Sentry.withSentryReactRouterV6Routing(Switch as any);
+
 function AppRouter() {
   const [, setLocation] = useLocation();
 
@@ -300,7 +302,7 @@ function AppRouter() {
         <ClerkQueryClientCacheInvalidator />
         <WorkspaceProvider>
           <TooltipProvider>
-            <Switch>
+            <SentrySwitch>
               {/* Landing — no shell */}
               <Route path="/" component={HomeRedirect} />
               <Route path="/sign-in/*?" component={SignInPage} />
@@ -381,7 +383,7 @@ function AppRouter() {
                 />
               </Route>
               <Route component={NotFound} />
-            </Switch>
+            </SentrySwitch>
           </TooltipProvider>
           <Toaster />
         </WorkspaceProvider>

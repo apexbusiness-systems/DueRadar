@@ -6,22 +6,37 @@ primary_region = "iad"
 
 [env]
   NODE_ENV = "production"
-  PORT = "3001"
+  PORT     = "3001"
+
+# Secrets set via: flyctl secrets set KEY=value
+# Required: DATABASE_URL, CLERK_SECRET_KEY, CLERK_PUBLISHABLE_KEY,
+#           ALLOWED_ORIGINS, ENABLE_REMINDER_SCHEDULER,
+#           SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS, SMTP_FROM,
+#           SENTRY_DSN, CLERK_WEBHOOK_SECRET
+
+[http_service]
+  internal_port        = 3001
+  force_https          = true
+  auto_stop_machines   = true
+  auto_start_machines  = true
+  min_machines_running = 1
+  processes            = ["app"]
+
+  [http_service.concurrency]
+    type       = "connections"
+    hard_limit = 250
+    soft_limit = 200
+
+  [[http_service.checks]]
+    grace_period  = "10s"
+    interval      = "15s"
+    method        = "GET"
+    path          = "/api/healthz"
+    protocol      = "http"
+    timeout       = "5s"
+    tls_skip_verify = false
 
 [[vm]]
-  memory = "512mb"
+  memory   = "512mb"
   cpu_kind = "shared"
-  cpus = 1
-
-[[services]]
-  internal_port = 3001
-  protocol = "tcp"
-
-  [[services.ports]]
-    port = 443
-    handlers = ["tls", "http"]
-
-  [[services.ports]]
-    port = 80
-    handlers = ["http"]
-    force_https = true
+  cpus     = 1

@@ -21,7 +21,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useCreateObligation, getListObligationsQueryKey } from "@workspace/api-client-react";
+import { getListObligationsQueryKey } from "@workspace/api-client-react";
+import { useCreateObligation } from "@/hooks/useObligations";
 import { useQueryClient } from "@tanstack/react-query";
 import { useToast } from "@/hooks/use-toast";
 import { ArrowLeft, Plus, Loader2 } from "lucide-react";

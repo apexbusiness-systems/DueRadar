@@ -1,4 +1,4 @@
-import { useRef, useEffect, useState, useCallback } from "react";
+import { useRef, useEffect, useCallback } from "react";
 import { Link } from "wouter";
 import { RadarMark, BtnAmber, BtnGhost } from "@/components/risk-radar/Chrome";
 import { ContractsIcon, PermitsIcon, InsuranceIcon, ComplianceIcon, DeadlinesIcon, ExposureIcon } from "@/pages/info-detail";
@@ -345,7 +345,7 @@ export default function LandingPage({ onEnter }: { onEnter?: () => void }) {
             </span>
           </div>
           <h1 className="text-[68px] font-bold tracking-[-0.04em] leading-none mb-0 text-white">
-            Deadlines Don’t Warn You. DueRadar Does.
+            Due<span className="text-[#F5A623]">Radar</span>
           </h1>
           <p className="text-[17px] font-medium text-[#CBD5E1] mt-5 mb-9 leading-relaxed max-w-[520px]">
             Catch renewals, filings, permits, contracts, and compliance dates before they turn into expensive surprises.

@@ -10,7 +10,7 @@ import {
   getGetUpcomingObligationsQueryKey,
   useGetDashboardRisk,
 } from "@workspace/api-client-react";
-import { StatusBadge, DueDateBadge } from "@/components/ObligationBadge";
+import { DueDateBadge } from "@/components/ObligationBadge";
 import {
   AlertTriangle,
   Clock,
