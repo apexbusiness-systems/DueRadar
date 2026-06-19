@@ -185,6 +185,6 @@ pnpm --filter @workspace/frontend run dev
    ```
    A scheduled pg_cron job or background task is recommended.
 
-2. **E2E tests in CI**: Playwright E2E tests require `VITE_TEST_BYPASS_AUTH=true` in the test build. This is safe because the production CI build uses `NODE_ENV=production` which rejects this flag.
+2. **E2E tests in CI**: CI runs unauthenticated smoke tests only (`unauth.spec.ts`, `landing.spec.ts`). Full auth E2E (`auth.spec.ts`) requires real Clerk credentials and a running API; run those locally or in a staging environment. The E2E job also validates the production frontend build (`NODE_ENV=production`), which hard-rejects `VITE_TEST_BYPASS_AUTH=true`.
 
 3. **Docker**: Not buildable in environments without a Docker daemon. Build on Fly.io remote builders or GitHub Actions.
