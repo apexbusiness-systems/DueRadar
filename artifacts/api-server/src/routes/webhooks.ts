@@ -25,17 +25,22 @@ router.post("/clerk", async (req: RawBodyRequest, res: Response) => {
     "svix-signature": req.headers["svix-signature"] as string,
   };
 
-  let evt: any;
+  let evt: { type: string; data: Record<string, unknown> };
   try {
     const wh = new Webhook(WEBHOOK_SECRET);
-    evt = wh.verify(payload, svixHeaders);
+    evt = wh.verify(payload, svixHeaders) as typeof evt;
   } catch (err) {
     req.log.error({ err }, "Webhook signature verification failed");
     return void res.status(400).json({ error: "Invalid signature" });
   }
 
   if (evt.type === "user.created") {
-    const { id, email_addresses, first_name, last_name } = evt.data;
+    const { id, email_addresses, first_name, last_name } = evt.data as {
+      id: string;
+      email_addresses?: Array<{ email_address?: string }>;
+      first_name?: string;
+      last_name?: string;
+    };
     const primaryEmail = email_addresses?.[0]?.email_address;
     if (primaryEmail) {
       const emailLower = primaryEmail.toLowerCase().trim();

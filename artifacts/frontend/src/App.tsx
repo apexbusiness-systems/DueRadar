@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { ClerkProvider, SignIn, SignUp, Show, useClerk } from "@clerk/react";
+import { ClerkProvider, SignIn, SignUp, Show, useClerk, useAuth } from "@clerk/react";
 import { shadcn } from "@clerk/themes";
 import { Switch, Route, useLocation, Router as WouterRouter, Redirect } from "wouter";
 import { QueryClientProvider, useQueryClient } from "@tanstack/react-query";
@@ -9,23 +9,22 @@ import { queryClient } from "@/lib/queryClient";
 import { WorkspaceProvider } from "@/contexts/WorkspaceContext";
 import { Sidebar, StatusBar, RadarMark } from "@/components/core/Chrome";
 import { cn } from "@/lib/utils";
+import { env } from "@/env";
 import LandingPage from "@/pages/landing";
 import InfoDetailPage from "@/pages/info-detail";
-import CommandCenterPage from "@/pages/command-center";
-import RiskRegisterPage from "@/pages/register";
-import RiskRecordPage from "@/pages/record";
-import RiskIntakePage from "@/pages/intake";
+import DashboardPage from "@/pages/dashboard";
+import ObligationsPage from "@/pages/obligations";
+import ObligationDetailPage from "@/pages/obligation-detail";
+import ObligationNewPage from "@/pages/obligation-new";
+import ImportPage from "@/pages/import";
 import DeliveryPage from "@/pages/delivery";
 import AuditPage from "@/pages/audit";
 import WorkspacePage from "@/pages/workspace";
 import NotFound from "@/pages/not-found";
-import ObligationNewPage from "@/pages/obligation-new";
-import ObligationsPage from "@/pages/obligations";
-import ObligationDetailPage from "@/pages/obligation-detail";
 
-const clerkPubKey = (import.meta.env.VITE_CLERK_PUBLISHABLE_KEY as string) || "pk_test_YWJvdev-c3VuYmVhbS0yMS5jbGVyay5hY2NvdW50cy5kZXYk";
+const clerkPubKey = env.CLERK_PUBLISHABLE_KEY;
 
-const clerkProxyUrl = import.meta.env.VITE_CLERK_PROXY_URL;
+const clerkProxyUrl = env.CLERK_PROXY_URL;
 const basePath = import.meta.env.BASE_URL.replace(/"/, "");
 
 function stripBase(path: string): string {
@@ -198,20 +197,19 @@ function SignUpPage() {
 }
 
 function HomeRedirect() {
-  return (
-    <>
-      <Show when="signed-in">
-        <Redirect to="/dashboard" />
-      </Show>
-      <Show when="signed-out">
-        <LandingPage onEnter={() => window.location.hash = "#dashboard"} />
-      </Show>
-    </>
-  );
+  const { isSignedIn, isLoaded } = useAuth();
+  // Only redirect after Clerk has fully loaded and confirmed sign-in state.
+  // Rendering the landing page by default ensures it is visible in CI E2E
+  // even if Clerk.js cannot be fetched (e.g. DNS failure for test keys).
+  // Protected app routes remain fully guarded by ProtectedRoute below.
+  if (isLoaded && isSignedIn) {
+    return <Redirect to="/dashboard" />;
+  }
+  return <LandingPage onEnter={() => window.location.hash = "#dashboard"} />;
 }
 
 function ProtectedRoute({ component: Component }: { component: React.ComponentType }) {
-  if (import.meta.env.VITE_TEST_BYPASS_AUTH === "true") {
+  if (env.TEST_BYPASS_AUTH) {
     return <Component />;
   }
   return (
@@ -315,7 +313,7 @@ function AppRouter() {
                 <ProtectedRoute
                   component={() => (
                     <ShellLayout>
-                      <CommandCenterPage />
+                      <DashboardPage />
                     </ShellLayout>
                   )}
                 />
@@ -324,7 +322,7 @@ function AppRouter() {
                 <ProtectedRoute
                   component={() => (
                     <ShellLayout>
-                      <RiskIntakePage />
+                      <ObligationNewPage />
                     </ShellLayout>
                   )}
                 />
@@ -333,7 +331,7 @@ function AppRouter() {
                 <ProtectedRoute
                   component={() => (
                     <ShellLayout>
-                      <RiskRecordPage />
+                      <ObligationDetailPage />
                     </ShellLayout>
                   )}
                 />
@@ -342,7 +340,7 @@ function AppRouter() {
                 <ProtectedRoute
                   component={() => (
                     <ShellLayout>
-                      <RiskRegisterPage />
+                      <ObligationsPage />
                     </ShellLayout>
                   )}
                 />
@@ -351,7 +349,7 @@ function AppRouter() {
                 <ProtectedRoute
                   component={() => (
                     <ShellLayout>
-                      <RiskIntakePage />
+                      <ImportPage />
                     </ShellLayout>
                   )}
                 />

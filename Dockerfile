@@ -43,9 +43,17 @@ WORKDIR /app
 
 ENV NODE_ENV=production
 
+# Create a non-root runtime user for security hardening.
+RUN addgroup -S appgroup && adduser -S appuser -G appgroup
+
 # esbuild bundles all dependencies — only the compiled dist is needed at runtime.
-COPY --from=builder /app/artifacts/api-server/dist ./dist
+COPY --from=builder --chown=appuser:appgroup /app/artifacts/api-server/dist ./dist
+
+USER appuser
 
 EXPOSE 3001
+
+HEALTHCHECK --interval=15s --timeout=5s --start-period=10s --retries=3 \
+  CMD wget -qO- http://localhost:3001/api/healthz || exit 1
 
 CMD ["node", "--enable-source-maps", "./dist/index.mjs"]
