@@ -1,0 +1,13 @@
+title = "gitleaks config"
+
+[allowlist]
+  description = """
+    Clerk publishable keys (pk_test_ / pk_live_) are public by design —
+    they are meant to be embedded in client-side code and are NOT secret.
+    Secret keys start with sk_ and must never be committed.
+  """
+  regexes = [
+    # Clerk publishable key prefix; see https://clerk.com/docs/references/react/overview
+    '''pk_test_[A-Za-z0-9+/=]+''',
+    '''pk_live_[A-Za-z0-9+/=]+''',
+  ]
