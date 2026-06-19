@@ -144,7 +144,6 @@ jobs:
           CI: 'true'
           NODE_ENV: test
           PORT: '3000'
-          VITE_TEST_BYPASS_AUTH: 'true'
           VITE_CLERK_PUBLISHABLE_KEY: pk_test_Y2xlcmsuZXhhbXBsZS5jb20k
         run: pnpm exec playwright test tests/e2e/unauth.spec.ts tests/e2e/landing.spec.ts
 
