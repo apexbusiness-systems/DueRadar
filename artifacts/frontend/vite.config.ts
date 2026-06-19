@@ -3,6 +3,16 @@ import react from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
 import path from "path";
 
+// Production guard: fail build if test bypass is enabled in a production build.
+if (
+  process.env.NODE_ENV === "production" &&
+  process.env.VITE_TEST_BYPASS_AUTH === "true"
+) {
+  throw new Error(
+    "FATAL: VITE_TEST_BYPASS_AUTH=true must not be set in a production build.",
+  );
+}
+
 const rawPort = process.env.PORT || "3000";
 
 if (!process.env.PORT && process.env.NODE_ENV !== "production") {

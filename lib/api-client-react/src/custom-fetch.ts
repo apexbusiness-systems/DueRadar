@@ -358,6 +358,16 @@ export async function customFetch<T = unknown>(
     }
   }
 
+  // Auto-attach a unique Idempotency-Key for mutating requests so the server's
+  // idempotency middleware does not reject them.  Each call site gets a fresh
+  // UUID, which is correct for new mutations.  Callers that need true
+  // idempotent retry behaviour should pass an explicit "idempotency-key" header
+  // in their options.headers.
+  const MUTATING_METHODS = ["POST", "PUT", "PATCH", "DELETE"];
+  if (MUTATING_METHODS.includes(method) && !headers.has("idempotency-key")) {
+    headers.set("idempotency-key", crypto.randomUUID());
+  }
+
   const requestInfo = { method, url: resolveUrl(input) };
 
   const response = await fetch(input, { ...init, method, headers });

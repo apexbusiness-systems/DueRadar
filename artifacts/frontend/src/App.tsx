@@ -9,23 +9,22 @@ import { queryClient } from "@/lib/queryClient";
 import { WorkspaceProvider } from "@/contexts/WorkspaceContext";
 import { Sidebar, StatusBar, RadarMark } from "@/components/core/Chrome";
 import { cn } from "@/lib/utils";
+import { env } from "@/env";
 import LandingPage from "@/pages/landing";
 import InfoDetailPage from "@/pages/info-detail";
-import CommandCenterPage from "@/pages/command-center";
-import RiskRegisterPage from "@/pages/register";
-import RiskRecordPage from "@/pages/record";
-import RiskIntakePage from "@/pages/intake";
+import DashboardPage from "@/pages/dashboard";
+import ObligationsPage from "@/pages/obligations";
+import ObligationDetailPage from "@/pages/obligation-detail";
+import ObligationNewPage from "@/pages/obligation-new";
+import ImportPage from "@/pages/import";
 import DeliveryPage from "@/pages/delivery";
 import AuditPage from "@/pages/audit";
 import WorkspacePage from "@/pages/workspace";
 import NotFound from "@/pages/not-found";
-import ObligationNewPage from "@/pages/obligation-new";
-import ObligationsPage from "@/pages/obligations";
-import ObligationDetailPage from "@/pages/obligation-detail";
 
-const clerkPubKey = (import.meta.env.VITE_CLERK_PUBLISHABLE_KEY as string) || "pk_test_YWJvdev-c3VuYmVhbS0yMS5jbGVyay5hY2NvdW50cy5kZXYk";
+const clerkPubKey = env.CLERK_PUBLISHABLE_KEY;
 
-const clerkProxyUrl = import.meta.env.VITE_CLERK_PROXY_URL;
+const clerkProxyUrl = env.CLERK_PROXY_URL;
 const basePath = import.meta.env.BASE_URL.replace(/"/, "");
 
 function stripBase(path: string): string {
@@ -211,7 +210,7 @@ function HomeRedirect() {
 }
 
 function ProtectedRoute({ component: Component }: { component: React.ComponentType }) {
-  if (import.meta.env.VITE_TEST_BYPASS_AUTH === "true") {
+  if (env.TEST_BYPASS_AUTH) {
     return <Component />;
   }
   return (
@@ -315,7 +314,7 @@ function AppRouter() {
                 <ProtectedRoute
                   component={() => (
                     <ShellLayout>
-                      <CommandCenterPage />
+                      <DashboardPage />
                     </ShellLayout>
                   )}
                 />
@@ -324,7 +323,7 @@ function AppRouter() {
                 <ProtectedRoute
                   component={() => (
                     <ShellLayout>
-                      <RiskIntakePage />
+                      <ObligationNewPage />
                     </ShellLayout>
                   )}
                 />
@@ -333,7 +332,7 @@ function AppRouter() {
                 <ProtectedRoute
                   component={() => (
                     <ShellLayout>
-                      <RiskRecordPage />
+                      <ObligationDetailPage />
                     </ShellLayout>
                   )}
                 />
@@ -342,7 +341,7 @@ function AppRouter() {
                 <ProtectedRoute
                   component={() => (
                     <ShellLayout>
-                      <RiskRegisterPage />
+                      <ObligationsPage />
                     </ShellLayout>
                   )}
                 />
@@ -351,7 +350,7 @@ function AppRouter() {
                 <ProtectedRoute
                   component={() => (
                     <ShellLayout>
-                      <RiskIntakePage />
+                      <ImportPage />
                     </ShellLayout>
                   )}
                 />

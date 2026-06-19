@@ -204,9 +204,6 @@ importers:
       '@clerk/themes':
         specifier: ^2.4.57
         version: 2.4.57(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
-      nodemailer:
-        specifier: ^8.0.7
-        version: 8.0.7
     devDependencies:
       '@hookform/resolvers':
         specifier: ^3.10.0

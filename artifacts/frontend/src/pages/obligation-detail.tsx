@@ -688,7 +688,7 @@ export default function ObligationDetailPage() {
                 <p className="text-xs text-slate-400">Add a rule to get notified before this deadline.</p>
               </div>
             ) : (
-              rules.map((rule, idx) => {
+              rules.map((rule) => {
                 const ChanIcon = CHANNEL_ICON[rule.channel] ?? Mail;
                 const RecipIcon = RECIPIENT_ICON[rule.recipientType] ?? UserCheck;
                 return (

@@ -74,7 +74,6 @@
   },
   "dependencies": {
     "@clerk/react": "^6.4.7",
-    "@clerk/themes": "^2.4.57",
-    "nodemailer": "^8.0.7"
+    "@clerk/themes": "^2.4.57"
   }
 }

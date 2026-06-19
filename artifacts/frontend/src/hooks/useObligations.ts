@@ -4,7 +4,7 @@ import { getListObligationsQueryKey } from "@workspace/api-client-react";
 export function useCreateObligation() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: async (data: any) => {
+    mutationFn: async (data: Record<string, unknown>) => {
       const key = crypto.randomUUID();
       const res = await fetch("/api/obligations", {
         method: "POST",

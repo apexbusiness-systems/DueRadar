@@ -1,0 +1,11 @@
+# Environment files — never commit secrets
+.env
+.env.*
+!.env.example
+
+# Build output
+dist/
+
+# Local dev
+node_modules/
+.vite/

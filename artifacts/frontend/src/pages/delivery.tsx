@@ -89,7 +89,6 @@ export default function DeliveryPage() {
                 <tbody>
                   {records.map((r, idx) => {
                     const s = STATUS_CONFIG[r.status] ?? STATUS_CONFIG.pending;
-                    const StatusIcon = s.icon;
                     return (
                       <tr
                         key={r.id}

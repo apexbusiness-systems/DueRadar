@@ -13,9 +13,8 @@ test.describe('Unauthenticated Endpoints', () => {
     // Check main headline exists
     await expect(page.locator('h1').first()).toBeVisible();
     
-    // Check Sign In and Sign Up buttons
+    // Check Sign In button if visible
     const signInBtn = page.getByRole('link', { name: /Sign In/i }).first();
-    const signUpBtn = page.getByRole('link', { name: /Sign Up/i }).first();
     if (await signInBtn.isVisible()) {
       await expect(signInBtn).toHaveAttribute('href', /.*\/sign-in/);
     }

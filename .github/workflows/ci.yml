@@ -5,15 +5,35 @@ on:
   pull_request:
   workflow_dispatch:
 
+# Prevent concurrent deploys to production on the same branch.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
+
 permissions:
   contents: read
   packages: write
 
 jobs:
+  # ── Secret scanning ───────────────────────────────────────────────────────────
+  secret-scan:
+    name: Secret Scan (gitleaks)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Run gitleaks
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
   # ── Typecheck + Test ─────────────────────────────────────────────────────────
   test:
     name: Typecheck & Test
     runs-on: ubuntu-latest
+    needs: [secret-scan]
 
     services:
       postgres:
@@ -48,8 +68,8 @@ jobs:
           pnpm exec tsc --build lib/db/tsconfig.json
           pnpm exec tsc --build lib/api-zod/tsconfig.json
 
-      - name: Typecheck
-        run: pnpm --filter @workspace/api-server run typecheck
+      - name: Typecheck (all)
+        run: pnpm run typecheck
 
       - name: Test
         env:
@@ -59,6 +79,28 @@ jobs:
           FLOWC_WEBHOOK_SECRET: test-flowc-secret-for-ci
           NODE_ENV: test
         run: pnpm --filter @workspace/api-server run test
+
+  # ── Dependency audit ──────────────────────────────────────────────────────────
+  audit:
+    name: Dependency Audit
+    runs-on: ubuntu-latest
+    needs: [secret-scan]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Audit for high/critical vulnerabilities
+        run: pnpm audit --audit-level=high
+        continue-on-error: true
 
   # ── Cloudflare Pages deploy ──────────────────────────────────────────────────
   deploy-frontend:
@@ -91,6 +133,7 @@ jobs:
           # BASE_PATH env var. Prevents MSYS2 path corruption on Windows builds.
           NODE_ENV: production
           VITE_CLERK_PUBLISHABLE_KEY: ${{ secrets.VITE_CLERK_PUBLISHABLE_KEY }}
+          VITE_CLERK_PROXY_URL: ${{ secrets.VITE_CLERK_PROXY_URL }}
         run: pnpm --filter @workspace/frontend run build
 
       - name: Verify dist — gate on MSYS path corruption
@@ -101,7 +144,7 @@ jobs:
             echo "CRITICAL: MSYS path corruption detected — aborting deploy"
             exit 1
           fi
-          echo "✅ Asset paths verified clean"
+          echo "Asset paths verified clean"
 
       - name: Deploy to Cloudflare Pages
         # NOTE: We do NOT use cloudflare/wrangler-action@v3 here because it runs
@@ -160,7 +203,7 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Run migrations
+      - name: Run migrations (checked-in only, never push)
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
         run: pnpm --filter @workspace/db run migrate

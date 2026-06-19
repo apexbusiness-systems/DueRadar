@@ -320,9 +320,16 @@ router.get("/export/csv", requireAuth, async (req: Request, res: Response) => {
       "createdAt",
     ];
 
+    // Neutralize CSV formula injection: cells starting with =, +, -, @, 0x09 (tab),
+    // or 0x0D (CR) can be interpreted as formulas by spreadsheet applications.
+    // Prefix them with a single-quote to force literal string interpretation.
+    const FORMULA_CHARS = /^[=+\-@\t\r]/;
     function csvCell(value: string | null | undefined): string {
-      const s = String(value ?? "");
-      if (s.includes(",") || s.includes('"') || s.includes("\n")) {
+      let s = String(value ?? "");
+      if (FORMULA_CHARS.test(s)) {
+        s = `'${s}`;
+      }
+      if (s.includes(",") || s.includes('"') || s.includes("\n") || s.includes("'")) {
         return `"${s.replace(/"/g, '""')}"`;
       }
       return s;
