@@ -37,12 +37,46 @@ onlyBuiltDependencies:
   - unrs-resolver
 
 overrides:
-  # Security patches for transitive dev-only dependencies.
-  # Production deps are patched at source (http-proxy-middleware, nodemailer).
-  ws: '>=8.21.0'
-  form-data: '>=4.0.6'
-  protobufjs: '>=7.6.1'
-  undici: '>=7.28.0'
+  # ── Security patches ─────────────────────────────────────────────────────────
+  # All entries below address high-severity CVEs in transitive dependencies.
+  # Each override pins to the lowest patched version that remains semver-
+  # compatible with its consuming package.
+  #
+  # GHSA-c2c7-rcm5-vvqj picomatch ReDoS via extglob quantifiers
+  #   2.x path: micromatch@4 > picomatch@<2.3.2 — pin to 2.3.2 (micromatch-scoped)
+  #   4.x path: vite@7/vitest@4 > picomatch@<4.0.4 — floor the range
+  "micromatch>picomatch": "2.3.2"
+  picomatch: ">=4.0.4"
+  # GHSA-j3q9-mxjg-w52f path-to-regexp DoS via sequential optional groups
+  #   Path: express@5 > router@2 > path-to-regexp@8.3.0 — needs >=8.4.0
+  #   Scoped to router so wrangler's path-to-regexp@6 is unaffected
+  "router>path-to-regexp": ">=8.4.0"
+  # GHSA-29mw-wpgm-hmr9 lodash code injection via _.template imports key names
+  #   Path: testcontainers > archiver > archiver-utils > lodash@4.17.23
+  lodash: ">=4.18.0"
+  # GHSA-q3j6-qgpj-74h6 / GHSA-v39h-62p7-jpjc fast-uri path traversal / host confusion
+  #   Path: orval > @scalar/openapi-parser > ajv > fast-uri@3.1.0
+  fast-uri: ">=3.1.2"
+  # GHSA-99f4-grh7-6pcq @grpc/grpc-js crash on malformed compressed message
+  #   Path: testcontainers > dockerode > @grpc/grpc-js@1.14.3
+  "@grpc/grpc-js": ">=1.14.4"
+  # GHSA-qjx8-664m-686j js-cookie prototype hijack / cookie-attribute injection
+  #   Path: @clerk/express > @clerk/shared > js-cookie@3.0.5
+  js-cookie: ">=3.0.7"
+  # GHSA-5375-pq7m-f5r2 tmp path traversal via unsanitized prefix/postfix
+  #   Path: testcontainers > tmp@0.2.5
+  tmp: ">=0.2.6"
+  # GHSA-3h5q-q39x-f9x3 ws memory exhaustion DoS from tiny fragments
+  #   Path: wrangler > miniflare > ws@8.20.1
+  ws: ">=8.21.0"
+  # GHSA-72xf-g2v4-qvf3 form-data CRLF injection
+  form-data: ">=4.0.6"
+  # GHSA-h755-8qp9-cq85 protobufjs unbounded Any expansion DoS
+  #   Path: testcontainers > dockerode > @grpc/grpc-js > @grpc/proto-loader > protobufjs@7.5.6
+  protobufjs: ">=7.6.1"
+  # GHSA-vmh5-mc38-953g undici TLS certificate validation bypass via SOCKS5 ProxyAgent
+  #   Paths: testcontainers > undici@7.25.0 / wrangler > miniflare > undici@7.24.8
+  undici: ">=7.28.0"
   '@esbuild-kit/esm-loader': npm:tsx@^4.21.0
   '@expo/ngrok-bin>@expo/ngrok-bin-darwin-arm64': '-'
   '@expo/ngrok-bin>@expo/ngrok-bin-darwin-x64': '-'

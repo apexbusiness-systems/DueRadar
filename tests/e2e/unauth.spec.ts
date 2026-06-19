@@ -8,10 +8,12 @@ test.describe('Unauthenticated Endpoints', () => {
     const response = await page.goto('/');
     expect(response?.status()).toBe(200);
     
-    await page.waitForLoadState('networkidle');
+    // Use domcontentloaded rather than networkidle: Clerk retries DNS for
+    // test-key domains and prevents networkidle in CI without external network.
+    await page.waitForLoadState('domcontentloaded');
 
     // Check main headline exists
-    await expect(page.locator('h1').first()).toBeVisible();
+    await expect(page.locator('h1').first()).toBeVisible({ timeout: 15000 });
     
     // Check Sign In button if visible
     const signInBtn = page.getByRole('link', { name: /Sign In/i }).first();
