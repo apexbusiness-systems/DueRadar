@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useLocation } from "wouter";
 import { useUser, useClerk } from "@clerk/react";
 import {
@@ -14,6 +14,152 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { useWorkspace } from "@/contexts/WorkspaceContext";
+import {
+  useGetDashboardMetrics,
+  getGetDashboardMetricsQueryKey,
+  useGetDashboardRisk,
+  getGetDashboardRiskQueryKey,
+  useGetWorkspace,
+  getGetWorkspaceQueryKey,
+} from "@workspace/api-client-react";
+
+/* ── RadarMark SVG ── */
+export function RadarMark({ size = 30 }: { size?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 30 30" fill="none">
+      <circle cx="15" cy="15" r="13" stroke="rgba(245,166,35,.4)" strokeWidth="1" />
+      <circle cx="15" cy="15" r="8" stroke="rgba(245,166,35,.6)" strokeWidth="1" />
+      <circle cx="15" cy="15" r="3" fill="#F5A623" />
+      <line x1="15" y1="2" x2="15" y2="6" stroke="rgba(245,166,35,.5)" strokeWidth="1.2" strokeLinecap="round" />
+      <line x1="15" y1="24" x2="15" y2="28" stroke="rgba(245,166,35,.5)" strokeWidth="1.2" strokeLinecap="round" />
+      <line x1="2" y1="15" x2="6" y2="15" stroke="rgba(245,166,35,.5)" strokeWidth="1.2" strokeLinecap="round" />
+      <line x1="24" y1="15" x2="28" y2="15" stroke="rgba(245,166,35,.5)" strokeWidth="1.2" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+/* ── Live Telemetry Status Bar ── */
+export function StatusBar() {
+  const [clock, setClock] = useState("");
+  const { workspaceId } = useWorkspace();
+
+  const metricsQuery = useGetDashboardMetrics(
+    { workspaceId: workspaceId ?? 0 },
+    {
+      query: {
+        queryKey: getGetDashboardMetricsQueryKey({ workspaceId: workspaceId ?? 0 }),
+        enabled: !!workspaceId,
+      },
+    },
+  );
+
+  const riskQuery = useGetDashboardRisk(
+    { workspaceId: workspaceId ?? 0 },
+    {
+      query: {
+        queryKey: getGetDashboardRiskQueryKey({ workspaceId: workspaceId ?? 0 }),
+        enabled: !!workspaceId,
+      },
+    },
+  );
+
+  const workspaceQuery = useGetWorkspace(workspaceId ?? 0, {
+    query: {
+      queryKey: getGetWorkspaceQueryKey(workspaceId ?? 0),
+      enabled: !!workspaceId,
+    },
+  });
+
+  useEffect(() => {
+    const tick = () => {
+      const d = new Date();
+      const p = (n: number) => String(n).padStart(2, "0");
+      setClock(`${p(d.getHours())}:${p(d.getMinutes())}:${p(d.getSeconds())}`);
+    };
+    tick();
+    const id = setInterval(tick, 1000);
+    return () => clearInterval(id);
+  }, []);
+
+  const isLoading = metricsQuery.isLoading || riskQuery.isLoading || workspaceQuery.isLoading;
+  const isError = metricsQuery.isError || riskQuery.isError;
+  const workspace = workspaceQuery.data;
+  const isDemo = workspace?.slug?.startsWith("demo-") || workspace?.name?.toLowerCase().includes("demo");
+
+  const critical = riskQuery.data?.criticalCount ?? 0;
+  const dueSoon = metricsQuery.data?.dueSoon ?? 0;
+  const totalMonitored = metricsQuery.data?.totalActive ?? 0;
+  const protectedCount = Math.max(0, totalMonitored - critical - dueSoon);
+
+  return (
+    <div
+      className="h-9 flex items-center gap-3 px-4 shrink-0 overflow-x-auto text-[#8898A8] border-b border-white/[0.08]"
+      style={{
+        background: "#0A0E18",
+      }}
+      data-testid="status-bar"
+    >
+      {/* LED Status Indicator */}
+      <div
+        className="w-[7.5px] h-[7.5px] rounded-full shrink-0"
+        style={{
+          background: isError ? "#FF4040" : isDemo ? "#F5A623" : "#00E676",
+          boxShadow: isError ? "0 0 8px #FF4040" : isDemo ? "0 0 8px #F5A623" : "0 0 8px #00E676",
+          animation: "pulse-led 2.5s ease-in-out infinite",
+        }}
+        aria-hidden="true"
+      />
+      <span className="text-[11px] font-medium tracking-[0.06em] uppercase whitespace-nowrap">
+        {isError ? (
+          <span className="text-[#FF4040]">System Error</span>
+        ) : isDemo ? (
+          <span className="text-[#F5A623] font-bold" data-testid="sandbox-badge">Sandbox Mode</span>
+        ) : (
+          <span className="text-[#8898A8]">Live Monitoring</span>
+        )}
+      </span>
+
+      <span className="text-white/10 select-none">|</span>
+
+      {/* Critical Badge */}
+      <span
+        className="inline-flex items-center gap-1.5 text-[10.5px] font-bold px-2 py-0.5 rounded-full border bg-red-500/10 border-red-500/20 text-[#FF4040] whitespace-nowrap"
+        title={`${critical} critical obligations due in 7 days or overdue`}
+      >
+        <span className="w-[4px] h-[4px] rounded-full bg-current" />
+        <span className="font-mono">{isLoading ? "..." : isError ? "ERR" : critical}</span> Critical
+      </span>
+
+      {/* Due Soon Badge */}
+      <span
+        className="inline-flex items-center gap-1.5 text-[10.5px] font-bold px-2 py-0.5 rounded-full border bg-amber-500/10 border-amber-500/20 text-[#F5A623] whitespace-nowrap"
+        title={`${dueSoon} obligations due in 30 days`}
+      >
+        <span className="w-[4px] h-[4px] rounded-full bg-current" />
+        <span className="font-mono">{isLoading ? "..." : isError ? "ERR" : dueSoon}</span> Due Soon
+      </span>
+
+      {/* Protected Badge */}
+      <span
+        className="inline-flex items-center gap-1.5 text-[10.5px] font-bold px-2 py-0.5 rounded-full border bg-emerald-500/10 border-emerald-500/20 text-[#00E676] whitespace-nowrap"
+        title={`${protectedCount} obligations protected with active reminder schedules`}
+      >
+        <span className="w-[4px] h-[4px] rounded-full bg-current" />
+        <span className="font-mono">{isLoading ? "..." : isError ? "ERR" : protectedCount}</span> Protected
+      </span>
+
+      {/* Clock & Monitor Stats */}
+      <span className="ml-auto text-[11px] font-medium tracking-[0.04em] whitespace-nowrap hidden sm:inline-flex items-center gap-2">
+        <span className="font-mono text-[#F0F4F8]">{clock}</span>
+        <span className="text-white/10 select-none">·</span>
+        <span>
+          <strong className="text-[#F0F4F8] font-mono">{isLoading ? "..." : isError ? "ERR" : totalMonitored}</strong> monitored
+        </span>
+      </span>
+    </div>
+  );
+}
 
 const NAV_SECTIONS = [
   {
@@ -72,16 +218,16 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
           mobileOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0",
         )}
       >
-        {/* Logo area */}
-        <div className="flex items-center gap-3 px-5 py-5 border-b border-white/10">
-          <img
-            src="/assets/app-icon.png"
-            alt="DueRadar app icon"
-            className="w-8 h-8 rounded-lg object-cover flex-shrink-0 shadow-lg"
-          />
-          <div className="min-w-0">
-            <p className="font-bold text-sm text-white leading-tight">DueRadar</p>
-            <p className="text-xs text-white/40 leading-tight mt-0.5 truncate">Deadline Tracker</p>
+        {/* Brand header */}
+        <div className="flex items-center gap-2.5 px-5 py-5 border-b border-white/10">
+          <RadarMark size={30} />
+          <div className="leading-none min-w-0">
+            <div className="text-[15px] font-bold text-[#F0F4F8] tracking-tight">
+              Due<span className="text-[#F5A623]">Radar</span>
+            </div>
+            <small className="block text-[9px] font-semibold text-white/40 mt-0.5 uppercase tracking-[0.14em] truncate">
+              Warning System
+            </small>
           </div>
         </div>
 
@@ -165,14 +311,13 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
             <Menu className="w-5 h-5" />
           </Button>
           <div className="flex items-center gap-2">
-            <img
-              src="/assets/app-icon.png"
-              alt="DueRadar app icon"
-              className="w-6 h-6 rounded object-cover"
-            />
+            <RadarMark size={24} />
             <span className="font-bold text-sm text-slate-900">DueRadar</span>
           </div>
         </header>
+
+        {/* Live Telemetry Status Bar */}
+        <StatusBar />
 
         <main className="flex-1 overflow-y-auto bg-slate-50">{children}</main>
       </div>

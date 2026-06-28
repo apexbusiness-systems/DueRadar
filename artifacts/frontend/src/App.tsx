@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { ClerkProvider, SignIn, SignUp, Show, useClerk, useAuth } from "@clerk/react";
 import { shadcn } from "@clerk/themes";
 import { Switch, Route, useLocation, Router as WouterRouter, Redirect } from "wouter";
@@ -7,9 +7,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { queryClient } from "@/lib/queryClient";
 import { WorkspaceProvider } from "@/contexts/WorkspaceContext";
-import { Sidebar, StatusBar, RadarMark } from "@/components/core/Chrome";
-import { cn } from "@/lib/utils";
-import { env } from "@/env";
+import { RadarMark } from "@/components/layout/AppLayout";
 import LandingPage from "@/pages/landing";
 import InfoDetailPage from "@/pages/info-detail";
 import DashboardPage from "@/pages/dashboard";
@@ -22,8 +20,9 @@ import AuditPage from "@/pages/audit";
 import WorkspacePage from "@/pages/workspace";
 import NotFound from "@/pages/not-found";
 
-const clerkPubKey = env.CLERK_PUBLISHABLE_KEY;
+import { env } from "./env";
 
+const clerkPubKey = env.CLERK_PUBLISHABLE_KEY;
 const clerkProxyUrl = env.CLERK_PROXY_URL;
 const basePath = import.meta.env.BASE_URL.replace(/"/, "");
 
@@ -209,7 +208,7 @@ function HomeRedirect() {
 }
 
 function ProtectedRoute({ component: Component }: { component: React.ComponentType }) {
-  if (env.TEST_BYPASS_AUTH) {
+  if (import.meta.env.VITE_TEST_BYPASS_AUTH === "true") {
     return <Component />;
   }
   return (
@@ -218,60 +217,13 @@ function ProtectedRoute({ component: Component }: { component: React.ComponentTy
         <Component />
       </Show>
       <Show when="signed-out">
-        <Redirect to="/" />
+        <Redirect to="/sign-in" />
       </Show>
     </>
   );
 }
 
-/* ── Shell layout: Sidebar + StatusBar + main content ── */
-function ShellLayout({ children }: { children: React.ReactNode }) {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
 
-  return (
-    <div className="relative min-h-screen flex flex-col lg:grid lg:grid-cols-[218px_1fr] bg-[#05070B] overflow-hidden">
-      {/* Sleek top mobile header */}
-      <div className="lg:hidden h-14 bg-[#0A0E18] border-b border-[rgba(255,255,255,.07)] flex items-center justify-between px-4 z-40 shrink-0">
-        <div className="flex items-center gap-2.5">
-          <RadarMark size={24} />
-          <span className="text-[14px] font-bold text-[#F0F4F8]">
-            Due<span className="text-[#F5A623]">Radar</span>
-          </span>
-        </div>
-        <button
-          onClick={() => setSidebarOpen(!sidebarOpen)}
-          className="text-[#8898A8] hover:text-[#F0F4F8] focus:outline-none p-1.5 transition-colors"
-          aria-label="Toggle Navigation Menu"
-        >
-          <span className="text-xl font-bold">{sidebarOpen ? "✕" : "≡"}</span>
-        </button>
-      </div>
-
-      {/* Sidebar Overlay/Drawer on mobile, standard sidebar on desktop */}
-      <div
-        className={cn(
-          "fixed inset-y-0 left-0 z-50 lg:relative lg:flex lg:translate-x-0 transition-transform duration-300 ease-out shrink-0",
-          sidebarOpen ? "translate-x-0" : "-translate-x-full"
-        )}
-      >
-        <Sidebar />
-        {/* Backdrop for mobile drawer */}
-        {sidebarOpen && (
-          <div
-            className="fixed inset-0 bg-black/60 backdrop-blur-sm lg:hidden -z-10"
-            onClick={() => setSidebarOpen(false)}
-          />
-        )}
-      </div>
-
-      {/* Main content pane */}
-      <div className="flex flex-col flex-1 overflow-hidden min-w-0">
-        <StatusBar />
-        {children}
-      </div>
-    </div>
-  );
-}
 
 function AppRouter() {
   const [, setLocation] = useLocation();
@@ -308,78 +260,30 @@ function AppRouter() {
               <Route path="/sign-up/*?" component={SignUpPage} />
               <Route path="/info/:category" component={InfoDetailPage} />
 
-              {/* Shell-wrapped authenticated routes */}
+              {/* Authenticated routes */}
               <Route path="/dashboard">
-                <ProtectedRoute
-                  component={() => (
-                    <ShellLayout>
-                      <DashboardPage />
-                    </ShellLayout>
-                  )}
-                />
+                <ProtectedRoute component={DashboardPage} />
               </Route>
               <Route path="/obligations/new">
-                <ProtectedRoute
-                  component={() => (
-                    <ShellLayout>
-                      <ObligationNewPage />
-                    </ShellLayout>
-                  )}
-                />
+                <ProtectedRoute component={ObligationNewPage} />
               </Route>
               <Route path="/obligations/:id">
-                <ProtectedRoute
-                  component={() => (
-                    <ShellLayout>
-                      <ObligationDetailPage />
-                    </ShellLayout>
-                  )}
-                />
+                <ProtectedRoute component={ObligationDetailPage} />
               </Route>
               <Route path="/obligations">
-                <ProtectedRoute
-                  component={() => (
-                    <ShellLayout>
-                      <ObligationsPage />
-                    </ShellLayout>
-                  )}
-                />
+                <ProtectedRoute component={ObligationsPage} />
               </Route>
               <Route path="/import">
-                <ProtectedRoute
-                  component={() => (
-                    <ShellLayout>
-                      <ImportPage />
-                    </ShellLayout>
-                  )}
-                />
+                <ProtectedRoute component={ImportPage} />
               </Route>
               <Route path="/delivery">
-                <ProtectedRoute
-                  component={() => (
-                    <ShellLayout>
-                      <DeliveryPage />
-                    </ShellLayout>
-                  )}
-                />
+                <ProtectedRoute component={DeliveryPage} />
               </Route>
               <Route path="/audit">
-                <ProtectedRoute
-                  component={() => (
-                    <ShellLayout>
-                      <AuditPage />
-                    </ShellLayout>
-                  )}
-                />
+                <ProtectedRoute component={AuditPage} />
               </Route>
               <Route path="/workspace">
-                <ProtectedRoute
-                  component={() => (
-                    <ShellLayout>
-                      <WorkspacePage />
-                    </ShellLayout>
-                  )}
-                />
+                <ProtectedRoute component={WorkspacePage} />
               </Route>
               <Route component={NotFound} />
             </Switch>

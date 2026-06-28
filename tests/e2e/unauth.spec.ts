@@ -20,6 +20,10 @@ test.describe('Unauthenticated Endpoints', () => {
     if (await signInBtn.isVisible()) {
       await expect(signInBtn).toHaveAttribute('href', /.*\/sign-in/);
     }
+    const signUpBtn = page.getByRole('link', { name: /Sign Up/i }).first();
+    if (await signUpBtn.isVisible()) {
+      await expect(signUpBtn).toHaveAttribute('href', /.*\/sign-up/);
+    }
   });
 
   test('Info detail page loads correctly', async ({ page }) => {

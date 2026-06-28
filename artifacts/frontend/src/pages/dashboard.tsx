@@ -9,6 +9,8 @@ import {
   useGetUpcomingObligations,
   getGetUpcomingObligationsQueryKey,
   useGetDashboardRisk,
+  useGetWorkspace,
+  getGetWorkspaceQueryKey,
 } from "@workspace/api-client-react";
 import { DueDateBadge } from "@/components/ObligationBadge";
 import {
@@ -294,13 +296,33 @@ export default function DashboardPage() {
   const upcoming = upcomingQuery.data ?? [];
   const isLoading = wsLoading || metricsQuery.isLoading;
 
+  const workspaceQuery = useGetWorkspace(workspaceId ?? 0, {
+    query: {
+      queryKey: getGetWorkspaceQueryKey(workspaceId ?? 0),
+      enabled: !!workspaceId,
+    },
+  });
+  const workspace = workspaceQuery.data;
+  const isDemo = workspace?.slug?.startsWith("demo-") || workspace?.name?.toLowerCase().includes("demo");
+
   return (
     <AppLayout>
       <div className="p-6 lg:p-8 max-w-7xl mx-auto">
         {/* Page header */}
         <div className="flex items-start justify-between mb-8">
           <div>
-            <h1 className="text-2xl font-black text-slate-900 tracking-tight">Dashboard</h1>
+            <div className="flex items-center gap-2.5">
+              <h1 className="text-2xl font-black text-slate-900 tracking-tight">Dashboard</h1>
+              {isDemo && (
+                <span
+                  className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-amber-500/10 border border-amber-500/30 text-amber-600 uppercase tracking-wider"
+                  data-testid="sandbox-banner"
+                >
+                  <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-ping" />
+                  Sandbox
+                </span>
+              )}
+            </div>
             <p className="text-slate-500 text-sm mt-1">
               {user?.firstName ? `Welcome back, ${user.firstName}.` : "Welcome back."}{" "}
               Here's what needs your attention.

@@ -53,3 +53,9 @@ Thumbs.db
 .env.*
 !.env.example
 !**/.env.example
+
+# Playwright credentials and generated artifacts
+playwright/.auth/
+test-results/
+playwright-report/
+blob-report/

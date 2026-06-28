@@ -2,8 +2,9 @@ import { type Request, type Response, type NextFunction } from "express";
 import { getAuth } from "@clerk/express";
 import { db } from "@workspace/db";
 import { idempotencyKeysTable } from "@workspace/db";
-import { eq } from "drizzle-orm";
+import { eq, and } from "drizzle-orm";
 import { logger } from "../lib/logger";
+import crypto from "crypto";
 
 // Routes that manage their own idempotency or are externally-called webhooks.
 // Paths are relative to the /api mount point (i.e. req.path inside the middleware).
@@ -38,22 +39,47 @@ export const idempotencyMiddleware = async (
 
   // Scope the key by the authenticated user when available.  Fall back to a
   // combination of the raw key and the client IP for unauthenticated routes.
-  const { userId } = getAuth(req);
+  let userId: string | null;
+  try {
+    userId = getAuth(req)?.userId || null;
+  } catch {
+    // In tests or if clerk middleware is not applied, fallback to req.auth
+    userId = (req as unknown as { auth?: { userId?: string } }).auth?.userId || null;
+  }
   const effectiveUserId =
     userId ??
     `anon:${(req.headers["x-forwarded-for"] as string | undefined)?.split(",")[0]?.trim() ?? req.ip ?? "unknown"}`;
+
+  const fingerprint = crypto
+    .createHash("sha256")
+    .update(JSON.stringify({ method, path: req.path, body: req.body }))
+    .digest("hex");
 
   try {
     // Look up any existing record for this key.
     const [existing] = await db
       .select()
       .from(idempotencyKeysTable)
-      .where(eq(idempotencyKeysTable.key, idempotencyKey))
+      .where(
+        and(
+          eq(idempotencyKeysTable.key, idempotencyKey),
+          eq(idempotencyKeysTable.userId, effectiveUserId)
+        )
+      )
       .limit(1);
 
     if (existing) {
+      if (existing.requestFingerprint !== fingerprint) {
+        res.status(409).json({ error: "Idempotency-Key collision: payload mismatch" });
+        return;
+      }
+
       if (existing.responseStatus !== null) {
         // Completed — replay the cached response.
+        if (existing.responseStatus === 204) {
+          res.status(204).end();
+          return;
+        }
         res.status(existing.responseStatus).json(existing.responseBody);
         return;
       } else {
@@ -69,29 +95,64 @@ export const idempotencyMiddleware = async (
       userId: effectiveUserId,
       requestMethod: method,
       requestPath: req.path,
+      requestFingerprint: fingerprint,
       responseStatus: null,
       responseBody: null,
     });
-  } catch (err) {
+  } catch (err: unknown) {
+    console.error("IDEMPOTENCY DB ERROR:", err);
     logger.error({ err }, "idempotency.db_check_failed");
-    res.status(500).json({ error: "Internal server error (idempotency check failed)" });
+    res.status(500).json({ error: err instanceof Error ? err.message : String(err) });
     return;
   }
 
   // Intercept res.json() to persist the response before it is sent.
   const originalJson = res.json.bind(res);
-  res.json = (body: unknown): Response => {
+  const originalSend = res.send.bind(res);
+  const originalEnd = res.end.bind(res);
+
+  const saveResponse = (status: number, body: unknown) => {
     db.update(idempotencyKeysTable)
       .set({
-        responseStatus: res.statusCode,
+        responseStatus: status,
         responseBody: body,
         updatedAt: new Date(),
       })
-      .where(eq(idempotencyKeysTable.key, idempotencyKey))
+      .where(
+        and(
+          eq(idempotencyKeysTable.key, idempotencyKey),
+          eq(idempotencyKeysTable.userId, effectiveUserId)
+        )
+      )
       .catch((err) =>
         logger.error({ err }, "idempotency.cache_update_failed"),
       );
+  };
+
+  let saved = false;
+
+  res.json = (body: unknown): Response => {
+    if (!saved) {
+      saveResponse(res.statusCode, body);
+      saved = true;
+    }
     return originalJson(body);
+  };
+
+  res.send = (body?: unknown): Response => {
+    if (!saved) {
+      saveResponse(res.statusCode, body === undefined ? null : body);
+      saved = true;
+    }
+    return originalSend(body);
+  };
+
+  res.end = (chunk?: unknown, encoding?: unknown, cb?: unknown): Response => {
+    if (!saved) {
+      saveResponse(res.statusCode, null);
+      saved = true;
+    }
+    return originalEnd(chunk, encoding as BufferEncoding, cb as () => void);
   };
 
   next();
