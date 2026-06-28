@@ -2,6 +2,8 @@ import { Link, useLocation } from "wouter";
 import { useUser, useClerk } from "@clerk/react";
 import { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
+import { useWorkspace } from "@/contexts/WorkspaceContext";
+import { useGetDashboardMetrics, getGetDashboardMetricsQueryKey, useGetDashboardRisk, getGetDashboardRiskQueryKey } from "@workspace/api-client-react";
 
 /* ── RadarMark SVG ── */
 export function RadarMark({ size = 30 }: { size?: number }) {
@@ -29,7 +31,7 @@ interface NavItem {
 
 const NAV_ITEMS: NavItem[] = [
   { id: "command", label: "Command Center", icon: "◎", href: "/dashboard" },
-  { id: "register", label: "Due Register", icon: "≡", href: "/obligations", badge: "10" },
+  { id: "register", label: "Due Register", icon: "≡", href: "/obligations" },
   { id: "record", label: "Due Record", icon: "◈", href: "/obligations/new" },
   { id: "intake", label: "Due Intake", icon: "↑", href: "/import" },
 ];
@@ -169,6 +171,27 @@ export function Sidebar() {
 /* ── Status Bar ── */
 export function StatusBar() {
   const [clock, setClock] = useState("");
+  const { workspaceId } = useWorkspace();
+
+  const { data: metrics } = useGetDashboardMetrics(
+    { workspaceId: workspaceId ?? 0 },
+    {
+      query: {
+        queryKey: getGetDashboardMetricsQueryKey({ workspaceId: workspaceId ?? 0 }),
+        enabled: !!workspaceId,
+      },
+    },
+  );
+
+  const { data: risk } = useGetDashboardRisk(
+    { workspaceId: workspaceId ?? 0 },
+    {
+      query: {
+        queryKey: getGetDashboardRiskQueryKey({ workspaceId: workspaceId ?? 0 }),
+        enabled: !!workspaceId,
+      },
+    },
+  );
 
   useEffect(() => {
     const tick = () => {
@@ -180,6 +203,11 @@ export function StatusBar() {
     const id = setInterval(tick, 1000);
     return () => clearInterval(id);
   }, []);
+
+  const critical = risk?.criticalCount ?? 0;
+  const dueSoon = metrics?.dueSoon ?? 0;
+  const protectedCount = (metrics?.totalActive ?? 0) - critical - dueSoon;
+  const totalMonitored = metrics?.totalActive ?? 0;
 
   return (
     <div
@@ -207,25 +235,25 @@ export function StatusBar() {
         style={{ background: "rgba(255,64,64,.15)", border: "1px solid rgba(255,64,64,.2)" }}
       >
         <span className="w-[5px] h-[5px] rounded-full bg-current" style={{ animation: "pulse-led 2s ease-in-out infinite" }} />
-        3 Critical
+        {critical} Critical
       </span>
       <span
         className="inline-flex items-center gap-[5px] text-[11px] font-semibold px-2.5 py-[3px] rounded-full text-[#F5A623]"
         style={{ background: "rgba(245,166,35,.18)", border: "1px solid rgba(245,166,35,.35)" }}
       >
         <span className="w-[5px] h-[5px] rounded-full bg-current" style={{ animation: "pulse-led 2s ease-in-out infinite" }} />
-        7 Due soon
+        {dueSoon} Due soon
       </span>
       <span
         className="inline-flex items-center gap-[5px] text-[11px] font-semibold px-2.5 py-[3px] rounded-full text-[#00E676]"
         style={{ background: "rgba(0,230,118,.13)", border: "1px solid rgba(0,230,118,.2)" }}
       >
         <span className="w-[5px] h-[5px] rounded-full bg-current" style={{ animation: "pulse-led 2s ease-in-out infinite" }} />
-        27 Protected
+        {Math.max(0, protectedCount)} Protected
       </span>
 
       <span className="ml-auto text-[11.5px] text-[#4A5568] tracking-[0.06em]">
-        {clock} ET · 47 deadlines monitored
+        {clock} ET · {totalMonitored} deadlines monitored
       </span>
     </div>
   );

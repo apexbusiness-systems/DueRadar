@@ -69,6 +69,24 @@ export async function seedDemoData(clerkUserId: string, email: string, name?: st
     return { workspaceId: pendingInvite.workspaceId };
   }
 
+  if (!demoDataMode) {
+    logger.info({ clerkUserId }, "Creating clean workspace for new user (demo mode disabled)");
+    const [workspace] = await db
+      .insert(workspacesTable)
+      .values({ name: `${name || "My"} Workspace`, slug: `ws-${Date.now()}` })
+      .returning();
+
+    await db.insert(workspaceMembersTable).values({
+      workspaceId: workspace.id,
+      clerkUserId,
+      email: normalizedEmail,
+      name: name || "Workspace Owner",
+      role: "owner",
+    });
+
+    return { workspaceId: workspace.id };
+  }
+
   // Create demo workspace
   const [workspace] = await db
     .insert(workspacesTable)

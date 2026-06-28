@@ -131,6 +131,9 @@ importers:
       '@clerk/shared':
         specifier: ^4.8.7
         version: 4.8.7(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      '@opentelemetry/api':
+        specifier: ^1.9.1
+        version: 1.9.1
       '@workspace/api-zod':
         specifier: workspace:*
         version: link:../../lib/api-zod

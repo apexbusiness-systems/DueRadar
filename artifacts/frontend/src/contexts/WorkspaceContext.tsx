@@ -37,16 +37,9 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
     setIsLoading(true);
     setError(null);
 
-    // Use the Clerk user ID as a stable idempotency key so repeated seed calls
-    // (e.g. on remount) return the cached response without creating duplicates.
-    const idempotencyKey = `seed:${user.id}`;
-
     fetch("/api/me/seed", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Idempotency-Key": idempotencyKey,
-      },
+      headers: { "Content-Type": "application/json" },
       credentials: "include",
       body: JSON.stringify({
         email,
@@ -75,12 +68,13 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
       setWorkspaceId(null);
       setInitialized(false);
       setError(null);
-      setIsLoading(true);
     }
   }, [isLoaded, user]);
 
+  const effectiveWorkspaceId = import.meta.env.VITE_TEST_BYPASS_AUTH === "true" ? 1 : workspaceId;
+
   return (
-    <WorkspaceContext.Provider value={{ workspaceId, isLoading, error }}>
+    <WorkspaceContext.Provider value={{ workspaceId: effectiveWorkspaceId, isLoading, error }}>
       {children}
     </WorkspaceContext.Provider>
   );

@@ -9,6 +9,8 @@ import {
   useGetUpcomingObligations,
   getGetUpcomingObligationsQueryKey,
   useGetDashboardRisk,
+  useGetWorkspace,
+  getGetWorkspaceQueryKey,
 } from "@workspace/api-client-react";
 import { DueDateBadge } from "@/components/ObligationBadge";
 import {
@@ -294,9 +296,24 @@ export default function DashboardPage() {
   const upcoming = upcomingQuery.data ?? [];
   const isLoading = wsLoading || metricsQuery.isLoading;
 
+  const workspaceQuery = useGetWorkspace(workspaceId ?? 0, {
+    query: {
+      queryKey: getGetWorkspaceQueryKey(workspaceId ?? 0),
+      enabled: !!workspaceId,
+    },
+  });
+  const workspace = workspaceQuery.data;
+  const isDemo = workspace?.slug?.startsWith("demo-") || workspace?.name?.toLowerCase().includes("demo");
+
   return (
     <AppLayout>
       <div className="p-6 lg:p-8 max-w-7xl mx-auto">
+        {isDemo && (
+          <div className="mb-6 p-4 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-600 text-sm font-medium flex items-center gap-2" data-testid="sandbox-banner">
+            <span className="w-2 h-2 rounded-full bg-amber-500 animate-pulse" />
+            <span>Sandbox Mode: You are viewing demo data. To use a clean workspace, configure DEMO_DATA_MODE=false in your environment.</span>
+          </div>
+        )}
         {/* Page header */}
         <div className="flex items-start justify-between mb-8">
           <div>
