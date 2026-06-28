@@ -44,6 +44,7 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            "Idempotency-Key": `seed:${user.id}`,
             ...(token ? { "Authorization": `Bearer ${token}` } : {}),
           },
           credentials: "include",

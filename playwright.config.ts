@@ -24,9 +24,17 @@ export default defineConfig({
       name: 'chromium',
       use: {
         ...devices['Desktop Chrome'],
+      },
+      testMatch: [/.*landing\.spec\.ts/, /.*unauth\.spec\.ts/],
+    },
+    {
+      name: 'authenticated',
+      use: {
+        ...devices['Desktop Chrome'],
         storageState: 'playwright/.auth/user.json',
       },
       dependencies: ['setup'],
+      testIgnore: [/.*landing\.spec\.ts/, /.*unauth\.spec\.ts/, /.*auth\.setup\.ts/],
     },
   ],
   webServer: {

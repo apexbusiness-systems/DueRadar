@@ -20,9 +20,10 @@ import AuditPage from "@/pages/audit";
 import WorkspacePage from "@/pages/workspace";
 import NotFound from "@/pages/not-found";
 
-const clerkPubKey = (import.meta.env.VITE_CLERK_PUBLISHABLE_KEY as string) || "pk_test_c3Ryb25nLWdydWItODkuY2xlcmsuYWNjb3VudHMuZGV2JA==";
+import { env } from "./env";
 
-const clerkProxyUrl = import.meta.env.VITE_CLERK_PROXY_URL;
+const clerkPubKey = env.CLERK_PUBLISHABLE_KEY;
+const clerkProxyUrl = env.CLERK_PROXY_URL;
 const basePath = import.meta.env.BASE_URL.replace(/"/, "");
 
 function stripBase(path: string): string {

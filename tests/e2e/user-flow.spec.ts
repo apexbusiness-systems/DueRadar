@@ -62,7 +62,7 @@ test.describe('DueRadar User Lifecycle Flow', () => {
     await expect(page.locator('h1')).toHaveText(testTitle);
 
     // 6. See it in the register/list
-    await page.getByTestId('nav-link-register').click();
+    await page.getByTestId('nav-link-obligations').click();
     await page.waitForURL(/.*\/obligations/);
     await page.waitForLoadState('networkidle');
 

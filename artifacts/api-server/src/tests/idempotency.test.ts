@@ -12,7 +12,7 @@ describe("Idempotency Middleware", () => {
     app.use((req, res, next) => {
       const headerUserId = req.headers["test-user-id"];
       if (headerUserId) {
-        (req as any).auth = { userId: headerUserId };
+        (req as unknown as { auth: { userId: string } }).auth = { userId: headerUserId as string };
       }
       next();
     });
@@ -48,6 +48,7 @@ describe("Idempotency Middleware", () => {
       .set("test-user-id", "user1")
       .send(body);
 
+    if (res1.status !== 201) console.error("TEST ERROR:", res1.body);
     expect(res1.status).toBe(201);
     expect(res1.body.count).toBe(1);
 

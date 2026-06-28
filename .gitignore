@@ -48,5 +48,14 @@ Thumbs.db
 .cache/
 .local/
 
-# Playwright credentials
-playwright/.auth
+# Environment files — never commit secrets
+.env
+.env.*
+!.env.example
+!**/.env.example
+
+# Playwright credentials and generated artifacts
+playwright/.auth/
+test-results/
+playwright-report/
+blob-report/
