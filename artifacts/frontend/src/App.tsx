@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { ClerkProvider, SignIn, SignUp, Show, useClerk } from "@clerk/react";
+import { ClerkProvider, SignIn, SignUp, Show, useClerk, useAuth } from "@clerk/react";
 import { shadcn } from "@clerk/themes";
 import { Switch, Route, useLocation, Router as WouterRouter, Redirect } from "wouter";
 import { QueryClientProvider, useQueryClient } from "@tanstack/react-query";
@@ -196,16 +196,15 @@ function SignUpPage() {
 }
 
 function HomeRedirect() {
-  return (
-    <>
-      <Show when="signed-in">
-        <Redirect to="/dashboard" />
-      </Show>
-      <Show when="signed-out">
-        <LandingPage onEnter={() => window.location.hash = "#dashboard"} />
-      </Show>
-    </>
-  );
+  const { isSignedIn, isLoaded } = useAuth();
+  // Only redirect after Clerk has fully loaded and confirmed sign-in state.
+  // Rendering the landing page by default ensures it is visible in CI E2E
+  // even if Clerk.js cannot be fetched (e.g. DNS failure for test keys).
+  // Protected app routes remain fully guarded by ProtectedRoute below.
+  if (isLoaded && isSignedIn) {
+    return <Redirect to="/dashboard" />;
+  }
+  return <LandingPage onEnter={() => window.location.hash = "#dashboard"} />;
 }
 
 function ProtectedRoute({ component: Component }: { component: React.ComponentType }) {
