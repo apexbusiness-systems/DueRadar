@@ -9,11 +9,15 @@ This report certifies that DueRadar's release gate verification is currently **B
 
 ## 1. Blocker Description
 
-- **Blocker**: Cloudflare Turnstile Bot Protection is active on the Clerk development instance (`blessed-spider-59.clerk.accounts.dev`) sign-up endpoint.
-- **Impact**: Headless and automated browser runs (Playwright) are flagged as bots by Cloudflare, presenting an interactive Turnstile captcha ("Verify you are human") that prevents the automated signup setup flow from completing.
-- **Unblock Action**: 
-  1. **Option A**: Temporarily disable **Bot Detection / Turnstile** in the Clerk Dashboard under **Security -> Bot Detection** for the development instance.
-  2. **Option B**: Pre-create the user `test+clerk_test@example.com` in the Clerk dashboard with password `testpassword123` so the test runner can use the sign-in flow (which does not trigger the Turnstile challenge).
+- **Credentials Attempted**:
+  - Email: `admin@test.com`
+  - Password: `Admin143!`
+- **Encountered Issues**:
+  1. **Sign-In Failure**: When attempting to sign in, Clerk returns: `"Couldn't find your account." (code: form_identifier_not_found, status: 422)`. This confirms that the user account does not currently exist in the Clerk development instance (`blessed-spider-59`).
+  2. **Sign-Up Failure (Turnstile Block)**: When the test runner attempts to automatically register/sign up the account, Cloudflare Turnstile bot detection displays a `"Verify you are human"` checkbox challenge. Playwright's automated browser context cannot complete this challenge programmatically (the challenge resets dynamically).
+- **Unblock Action**:
+  - The user must create the account `admin@test.com` with password `Admin143!` directly inside the **Clerk Dashboard** (under **Users -> Create User**). This completely bypasses the email verification/Turnstile sign-up challenge.
+  - Once the user exists on Clerk's servers, the E2E sign-in suite can run successfully without Turnstile challenges.
 
 ---
 
@@ -31,30 +35,11 @@ This report certifies that DueRadar's release gate verification is currently **B
 
 ## 3. Git Metadata
 
-- **Commit SHA**: `44e916d6f4b91e2766e8e5d3d1d1cf54e337f55a`
+- **Commit SHA**: `b2af7d6a7ad7856cde0413860b259bcdc52de96a`
 - **Git Status**:
   ```
-  ## fix-fly-healthcheck
-   M .gitignore
-   M artifacts/api-server/build.mjs
-   M artifacts/api-server/package.json
-   M artifacts/api-server/src/lib/seed.ts
-   M artifacts/api-server/src/middlewares/idempotency.ts
-   M artifacts/api-server/src/routes/webhooks.ts
-   M artifacts/frontend/.env
-   M artifacts/frontend/src/App.tsx
-   M artifacts/frontend/src/components/core/Chrome.tsx
-   M artifacts/frontend/src/contexts/WorkspaceContext.tsx
-   M artifacts/frontend/src/hooks/use-toast.ts
-   M artifacts/frontend/src/hooks/useObligations.ts
-   M artifacts/frontend/src/pages/dashboard.tsx
-   M artifacts/frontend/src/pages/delivery.tsx
-   M artifacts/frontend/src/pages/obligation-detail.tsx
-   M artifacts/frontend/vite.config.ts
-   M playwright.config.ts
-   M pnpm-lock.yaml
-   M tests/e2e/dashboard.spec.ts
-   M tests/e2e/unauth.spec.ts
+  ## apex/release-gate/20260628-e2e-hardening-metrics-idempotency
+  M  tests/e2e/auth.setup.ts
   ```
 
 ---
@@ -77,5 +62,5 @@ This report certifies that DueRadar's release gate verification is currently **B
 
 ## 5. Certification Conclusion
 
-The codebase itself is fully clean and complies with all static checks, unit tests, and styling rules. However, the E2E verification path is **BLOCKED** by Clerk's Turnstile bot detection on signup.
-Once Turnstile is disabled or a test account is pre-created in the Clerk dashboard, the E2E verification can be run to completion.
+The codebase itself is fully clean and complies with all static checks, unit tests, and styling rules. However, the E2E verification path is **BLOCKED** because the `admin@test.com` account does not exist on Clerk, and automated signup is prevented by Turnstile.
+Once the account is pre-created in the Clerk dashboard, E2E validation can complete.

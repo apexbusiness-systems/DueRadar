@@ -1,70 +1,112 @@
 import { test as setup, expect } from '@playwright/test';
+import path from 'path';
 
-const authFile = 'playwright/.auth/user.json';
+export const authFile = path.join('playwright', '.auth', 'user.json');
 
 setup('authenticate via Clerk', async ({ page }) => {
-  // Clear any cookies/storage
+  // Capture page logs and errors
+  page.on('console', msg => console.log('[PAGE CONSOLE]', msg.type(), msg.text()));
+  page.on('pageerror', err => console.error('[PAGE ERROR]', err.message));
+
+  // Log all failed network requests/responses
+  page.on('requestfailed', request => {
+    console.log('[REQ FAILED]', request.method(), request.url(), request.failure()?.errorText);
+  });
+  page.on('response', async response => {
+    if (response.status() >= 400) {
+      console.log('[RESP ERROR]', response.status(), response.url());
+      try {
+        const bodyText = await response.text();
+        console.log('[RESP BODY]', bodyText.substring(0, 1000));
+      } catch (e) {
+        console.log('[RESP BODY UNREADABLE]');
+      }
+    }
+  });
+
   await page.context().clearCookies();
-  
-  // Go to sign-in page
-  await page.goto('/sign-in');
+
+  console.log('Navigating to sign-up...');
+  await page.goto('/sign-up');
   await page.waitForLoadState('networkidle');
 
-  // Locate and fill email
-  const emailInput = page.getByPlaceholder(/email address/i).or(page.locator('input[type="email"], input[name="identifier"]')).first();
-  await expect(emailInput).toBeVisible({ timeout: 15000 });
-  await emailInput.fill('test+clerk_test@example.com');
+  // Fill in email
+  const signUpEmailInput = page
+    .locator('input[type="email"], input[name="email_address"]')
+    .or(page.getByPlaceholder(/email address/i))
+    .locator('visible=true')
+    .first();
+  await expect(signUpEmailInput).toBeVisible({ timeout: 15000 });
+  await signUpEmailInput.fill('admin@test.com');
 
-  // Locate and fill password
-  const passwordInput = page.getByPlaceholder(/password/i).or(page.locator('input[type="password"], input[name="password"]')).first();
-  await expect(passwordInput).toBeVisible({ timeout: 15000 });
-  await passwordInput.fill('testpassword123');
+  // Fill in password
+  const signUpPasswordInput = page
+    .locator('input[type="password"], input[name="password"]')
+    .or(page.getByPlaceholder(/password/i))
+    .locator('visible=true')
+    .first();
+  await expect(signUpPasswordInput).toBeVisible({ timeout: 15000 });
+  await signUpPasswordInput.fill('Admin143!');
 
-  // Submit sign-in
-  const continueBtn = page.getByRole('button', { name: /^Continue\s*▸?$/i }).first();
-  await continueBtn.click();
+  // Click continue to sign-up
+  const signUpContinueBtn = page
+    .locator('button:visible')
+    .filter({ hasText: /continue|sign up/i })
+    .filter({ hasNotText: 'Google' })
+    .first();
+  await expect(signUpContinueBtn).toBeVisible({ timeout: 10000 });
+  await signUpContinueBtn.click();
 
-  // Try to wait for redirect to dashboard
-  try {
-    await expect(page).toHaveURL(/.*\/dashboard/, { timeout: 8000 });
-  } catch (err) {
-    // If sign-in did not redirect within 8 seconds, fall back to sign-up
-    console.log('Sign-in did not redirect to dashboard. Proceeding to signup...');
-    await page.goto('/sign-up');
+  // Wait a moment and check if we are on OTP verification or if there's an error
+  await page.waitForTimeout(5000);
+
+  // If we see OTP input, enter 424242
+  const codeInput = page.locator('input[name="code"], input[autocomplete="one-time-code"]').first();
+  if (await codeInput.isVisible()) {
+    console.log('OTP code input found. Entering test code 424242...');
+    await codeInput.fill('424242');
+    await expect(page).toHaveURL(/\/(dashboard|app|workspace)/, { timeout: 30000 });
+  } else {
+    console.log('Not on OTP page. Proceeding to sign-in fallback...');
+    await page.goto('/sign-in');
     await page.waitForLoadState('networkidle');
 
-    const signUpEmailInput = page.getByPlaceholder(/email address/i).or(page.locator('input[type="email"], input[name="email_address"]')).first();
-    await expect(signUpEmailInput).toBeVisible({ timeout: 15000 });
-    await signUpEmailInput.fill('test+clerk_test@example.com');
+    const signInEmailInput = page
+      .locator('input[type="email"], input[name="identifier"]')
+      .or(page.getByPlaceholder(/email address/i))
+      .locator('visible=true')
+      .first();
+    await expect(signInEmailInput).toBeVisible({ timeout: 15000 });
+    await signInEmailInput.fill('admin@test.com');
 
-    const signUpPasswordInput = page.getByPlaceholder(/password/i).or(page.locator('input[type="password"], input[name="password"]')).first();
-    await expect(signUpPasswordInput).toBeVisible({ timeout: 15000 });
-    await signUpPasswordInput.fill('testpassword123');
+    const signInContinueBtn = page
+      .locator('button:visible')
+      .filter({ hasText: /continue/i })
+      .filter({ hasNotText: 'Google' })
+      .first();
+    await expect(signInContinueBtn).toBeVisible({ timeout: 10000 });
+    await signInContinueBtn.click();
 
-    const signUpContinueBtn = page.getByRole('button', { name: /^Continue\s*▸?$/i }).first();
-    await signUpContinueBtn.click();
+    const signInPasswordInput = page
+      .locator('input[type="password"], input[name="password"]')
+      .or(page.getByPlaceholder(/password/i))
+      .locator('visible=true')
+      .first();
+    await expect(signInPasswordInput).toBeVisible({ timeout: 15000 });
+    await signInPasswordInput.fill('Admin143!');
 
-    // Check for Turnstile captcha iframe
-    const turnstile = page.locator('iframe[src*="challenges.cloudflare.com"]');
-    try {
-      await expect(turnstile).toBeVisible({ timeout: 5000 });
-      console.log('Turnstile challenge detected. Attempting to click Turnstile iframe...');
-      await turnstile.click();
-      await page.waitForTimeout(5000);
-    } catch (e) {
-      console.log('No Turnstile challenge detected.');
-    }
+    const signInBtn = page
+      .locator('button:visible')
+      .filter({ hasText: /continue|sign in/i })
+      .filter({ hasNotText: 'Google' })
+      .first();
+    await expect(signInBtn).toBeVisible({ timeout: 10000 });
+    await signInBtn.click();
 
-    // Signup OTP code input
-    const codeInput = page.locator('input[name="code"], input[autocomplete="one-time-code"]').first();
-    await expect(codeInput).toBeVisible({ timeout: 15000 });
-    await codeInput.fill('424242');
-
-    // Wait for redirect to dashboard after sign-up
-    await expect(page).toHaveURL(/.*\/dashboard/, { timeout: 25000 });
+    await expect(page).toHaveURL(/\/(dashboard|app|workspace)/, { timeout: 30000 });
   }
 
   // Save authentication state
   await page.context().storageState({ path: authFile });
-  console.log('Authentication state saved successfully.');
+  console.log('[auth.setup] Authentication state saved to', authFile);
 });
