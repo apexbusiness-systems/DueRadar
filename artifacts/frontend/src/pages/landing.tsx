@@ -1,7 +1,48 @@
 import { useRef, useEffect, useCallback } from "react";
 import { Link } from "wouter";
-import { RadarMark, BtnAmber, BtnGhost } from "@/components/core/Chrome";
+import { RadarMark } from "@/components/layout/AppLayout";
 import { ContractsIcon, PermitsIcon, InsuranceIcon, ComplianceIcon, DeadlinesIcon, ExposureIcon } from "@/pages/info-detail";
+import { cn } from "@/lib/utils";
+
+/* ── Custom buttons for landing ── */
+export function BtnAmber({ children, onClick, className }: { children: React.ReactNode; onClick?: () => void; className?: string }) {
+  return (
+    <button
+      className={cn(
+        "inline-flex items-center gap-[7px] px-4 py-[9px] rounded-lg text-[13.5px] font-semibold transition-all duration-150 whitespace-nowrap",
+        className
+      )}
+      style={{
+        background: "#F5A623",
+        color: "#0F0800",
+        border: "1px solid #F5A623",
+        boxShadow: "0 0 16px rgba(245,166,35,.18)",
+      }}
+      onClick={onClick}
+      onMouseEnter={(e) => {
+        e.currentTarget.style.filter = "brightness(1.1)";
+        e.currentTarget.style.boxShadow = "0 0 24px rgba(245,166,35,.18)";
+      }}
+      onMouseLeave={(e) => {
+        e.currentTarget.style.filter = "";
+        e.currentTarget.style.boxShadow = "0 0 16px rgba(245,166,35,.18)";
+      }}
+    >
+      {children}
+    </button>
+  );
+}
+
+export function BtnGhost({ children, onClick }: { children: React.ReactNode; onClick?: () => void }) {
+  return (
+    <button
+      className="inline-flex items-center gap-[7px] px-4 py-[9px] rounded-lg text-[13.5px] font-semibold transition-all duration-150 whitespace-nowrap text-[#8898A8] border border-[rgba(255,255,255,.07)] hover:bg-[rgba(255,255,255,.04)] hover:text-[#F0F4F8] hover:border-[rgba(0,200,240,.28)]"
+      onClick={onClick}
+    >
+      {children}
+    </button>
+  );
+}
 
 /* ── Orbiting category labels (DOM elements, not canvas) ── */
 interface OrbitalNode {

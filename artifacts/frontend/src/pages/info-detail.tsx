@@ -1,5 +1,5 @@
 import { useRoute, Link } from "wouter";
-import { RadarMark } from "@/components/core/Chrome";
+import { RadarMark } from "@/components/layout/AppLayout";
 import { useState } from "react";
 
 // Beautiful custom SVGs for the categories

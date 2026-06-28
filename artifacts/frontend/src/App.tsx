@@ -7,7 +7,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { queryClient } from "@/lib/queryClient";
 import { WorkspaceProvider } from "@/contexts/WorkspaceContext";
-import { RadarMark } from "@/components/core/Chrome";
+import { RadarMark } from "@/components/layout/AppLayout";
 import LandingPage from "@/pages/landing";
 import InfoDetailPage from "@/pages/info-detail";
 import DashboardPage from "@/pages/dashboard";
@@ -20,7 +20,7 @@ import AuditPage from "@/pages/audit";
 import WorkspacePage from "@/pages/workspace";
 import NotFound from "@/pages/not-found";
 
-const clerkPubKey = (import.meta.env.VITE_CLERK_PUBLISHABLE_KEY as string) || "pk_test_YWJvdev-c3VuYmVhbS0yMS5jbGVyay5hY2NvdW50cy5kZXYk";
+const clerkPubKey = (import.meta.env.VITE_CLERK_PUBLISHABLE_KEY as string) || "pk_test_c3Ryb25nLWdydWItODkuY2xlcmsuYWNjb3VudHMuZGV2JA==";
 
 const clerkProxyUrl = import.meta.env.VITE_CLERK_PROXY_URL;
 const basePath = import.meta.env.BASE_URL.replace(/"/, "");
@@ -217,7 +217,7 @@ function ProtectedRoute({ component: Component }: { component: React.ComponentTy
         <Component />
       </Show>
       <Show when="signed-out">
-        <Redirect to="/" />
+        <Redirect to="/sign-in" />
       </Show>
     </>
   );

@@ -19,12 +19,13 @@ import {
 } from "@workspace/api-client-react";
 import { StatusBadge, DueDateBadge } from "@/components/ObligationBadge";
 import { HealthScoreBadge } from "@/components/HealthScoreBadge";
-import { Plus, Search, Download, Trash2, CheckCircle2, ChevronRight, ClipboardList, Upload } from "lucide-react";
+import { Plus, Search, Download, Trash2, CheckCircle2, ClipboardList, Upload } from "lucide-react";
 import { format, parseISO } from "date-fns";
 import { useQueryClient } from "@tanstack/react-query";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 import { useWorkspace } from "@/contexts/WorkspaceContext";
+import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
 
 const CATEGORIES = ["All", "Licensing", "Insurance", "Contracts", "Software", "HR & Compliance", "Real Estate", "Other"];
 const STATUSES = [
@@ -250,7 +251,7 @@ export default function ObligationsPage() {
                     <th className="text-left px-4 py-3.5 text-xs font-semibold text-slate-500 uppercase tracking-wide">Category</th>
                     <th className="text-left px-4 py-3.5 text-xs font-semibold text-slate-500 uppercase tracking-wide">Status</th>
                     <th className="text-left px-4 py-3.5 text-xs font-semibold text-slate-500 uppercase tracking-wide">Due Date</th>
-                    <th className="text-left px-4 py-3.5 text-xs font-semibold text-slate-500 uppercase tracking-wide hidden xl:table-cell">Health</th>
+                    <th className="text-left px-4 py-3.5 text-xs font-semibold text-slate-500 uppercase tracking-wide hidden lg:table-cell">Health</th>
                     <th className="text-left px-4 py-3.5 text-xs font-semibold text-slate-500 uppercase tracking-wide hidden lg:table-cell">Owner</th>
                     <th className="text-right px-6 py-3.5 text-xs font-semibold text-slate-500 uppercase tracking-wide">Actions</th>
                   </tr>
@@ -289,7 +290,7 @@ export default function ObligationsPage() {
                       <td className="px-4 py-4">
                         <span className="text-sm text-slate-600 font-medium">{format(parseISO(o.dueDate), "MMM d, yyyy")}</span>
                       </td>
-                      <td className="px-4 py-4 hidden xl:table-cell"><HealthScoreBadge score={healthScore} size="sm" /></td>
+                      <td className="px-4 py-4 hidden lg:table-cell"><HealthScoreBadge score={healthScore} size="sm" /></td>
                       <td className="px-4 py-4 hidden lg:table-cell">
                         {o.ownerEmail ? (
                           <span className="text-sm text-slate-600 truncate max-w-36 block">{o.ownerEmail}</span>
@@ -298,32 +299,45 @@ export default function ObligationsPage() {
                         )}
                       </td>
                       <td className="px-6 py-4">
-                        <div className="flex items-center justify-end gap-1">
+                        <div className="flex items-center justify-end gap-3">
                           {o.status === "active" && (
-                            <button
-                              className="w-8 h-8 rounded-lg flex items-center justify-center text-emerald-600 hover:bg-emerald-50 transition-colors"
-                              onClick={() => handleComplete(o.id)}
-                              data-testid={`button-complete-${o.id}`}
-                              title="Mark complete"
-                            >
-                              <CheckCircle2 className="w-4 h-4" />
-                            </button>
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <button
+                                  className="w-8 h-8 rounded-lg flex items-center justify-center text-emerald-600 hover:bg-emerald-50 focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:outline-none transition-colors"
+                                  onClick={() => handleComplete(o.id)}
+                                  data-testid={`button-complete-${o.id}`}
+                                  aria-label="Mark obligation complete"
+                                >
+                                  <CheckCircle2 className="w-4 h-4" />
+                                </button>
+                              </TooltipTrigger>
+                              <TooltipContent>Mark complete</TooltipContent>
+                            </Tooltip>
                           )}
                           <Link href={`/obligations/${o.id}`}>
-                            <button
-                              className="w-8 h-8 rounded-lg flex items-center justify-center text-slate-400 hover:bg-slate-100 hover:text-slate-600 transition-colors"
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              className="h-8 px-2.5 rounded-lg text-xs font-semibold border-slate-200 text-slate-700 hover:bg-slate-100 hover:text-slate-900 focus-visible:ring-2 focus-visible:ring-slate-400 focus-visible:outline-none"
                               data-testid={`button-view-${o.id}`}
                             >
-                              <ChevronRight className="w-4 h-4" />
-                            </button>
+                              Details
+                            </Button>
                           </Link>
-                          <button
-                            className="w-8 h-8 rounded-lg flex items-center justify-center text-slate-300 hover:bg-red-50 hover:text-red-500 transition-colors"
-                            onClick={() => handleDelete(o.id, o.title)}
-                            data-testid={`button-delete-${o.id}`}
-                          >
-                            <Trash2 className="w-4 h-4" />
-                          </button>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <button
+                                className="w-8 h-8 rounded-lg flex items-center justify-center text-slate-300 hover:bg-red-50 hover:text-red-500 focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:outline-none transition-colors"
+                                onClick={() => handleDelete(o.id, o.title)}
+                                data-testid={`button-delete-${o.id}`}
+                                aria-label="Delete obligation"
+                              >
+                                <Trash2 className="w-4 h-4" />
+                              </button>
+                            </TooltipTrigger>
+                            <TooltipContent>Delete obligation</TooltipContent>
+                          </Tooltip>
                         </div>
                       </td>
                     </tr>

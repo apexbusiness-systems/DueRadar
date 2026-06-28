@@ -308,16 +308,21 @@ export default function DashboardPage() {
   return (
     <AppLayout>
       <div className="p-6 lg:p-8 max-w-7xl mx-auto">
-        {isDemo && (
-          <div className="mb-6 p-4 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-600 text-sm font-medium flex items-center gap-2" data-testid="sandbox-banner">
-            <span className="w-2 h-2 rounded-full bg-amber-500 animate-pulse" />
-            <span>Sandbox Mode: You are viewing demo data. To use a clean workspace, configure DEMO_DATA_MODE=false in your environment.</span>
-          </div>
-        )}
         {/* Page header */}
         <div className="flex items-start justify-between mb-8">
           <div>
-            <h1 className="text-2xl font-black text-slate-900 tracking-tight">Dashboard</h1>
+            <div className="flex items-center gap-2.5">
+              <h1 className="text-2xl font-black text-slate-900 tracking-tight">Dashboard</h1>
+              {isDemo && (
+                <span
+                  className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-amber-500/10 border border-amber-500/30 text-amber-600 uppercase tracking-wider"
+                  data-testid="sandbox-banner"
+                >
+                  <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-ping" />
+                  Sandbox
+                </span>
+              )}
+            </div>
             <p className="text-slate-500 text-sm mt-1">
               {user?.firstName ? `Welcome back, ${user.firstName}.` : "Welcome back."}{" "}
               Here's what needs your attention.
