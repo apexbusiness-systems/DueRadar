@@ -14,14 +14,28 @@
 ## Required Secrets
 
 ### GitHub Actions Secrets
+Production migration secrets and variables are read from the `DueRadar` GitHub Environment.
+
 | Secret | Description |
 |--------|-------------|
 | `VITE_CLERK_PUBLISHABLE_KEY` | Clerk publishable key for frontend build |
 | `VITE_CLERK_PROXY_URL` | Clerk proxy URL (e.g. `https://dueradar.icu/api/__clerk`) |
 | `CLOUDFLARE_API_TOKEN` | Cloudflare API token with Pages write permission |
 | `CLOUDFLARE_ACCOUNT_ID` | Cloudflare account ID |
-| `DATABASE_URL` | PostgreSQL connection string for migrations |
+| `DATABASE_URL` | PostgreSQL connection string for migrations. For Supabase on GitHub-hosted runners, use the IPv4-compatible Supavisor pooler URL, not the direct `db.<project>.supabase.co` URL. |
+| `SUPABASE_DB_URL` | Optional alternative to `DATABASE_URL`; full Supavisor pooler connection string for migrations. |
+| `SUPABASE_ACCESS_TOKEN` | Optional Supabase Management API/CLI personal access token. This token is not a Postgres password and cannot run Drizzle migrations by itself. |
+| `SUPABASE_PROJECT_ID` | Supabase project reference, used with `SUPABASE_DB_PASSWORD` and `SUPABASE_POOLER_HOST` to build the migration URL at runtime. |
+| `SUPABASE_DB_PASSWORD` | Supabase database password, used with `SUPABASE_PROJECT_ID` and `SUPABASE_POOLER_HOST` to build the migration URL at runtime. Legacy `DATABASE_PASSWORD` is also accepted. |
+| `SUPABASE_POOLER_HOST` | Supavisor pooler host from the Supabase Dashboard Connect panel, for example `aws-0-<region>.pooler.supabase.com`. |
 | `FLY_API_TOKEN` | Fly.io deploy token |
+
+### GitHub Actions Variables
+| Variable | Description |
+|----------|-------------|
+| `SUPABASE_PROJECT_ID` | Optional non-secret alternative to the `SUPABASE_PROJECT_ID` secret. |
+| `SUPABASE_URL` | Optional Supabase project API URL; used only to derive the project reference when constructing a migration URL. |
+| `SUPABASE_POOLER_HOST` | Optional non-secret alternative to the `SUPABASE_POOLER_HOST` secret. |
 
 ### Fly.io Secrets (set via `flyctl secrets set`)
 | Secret | Description |
