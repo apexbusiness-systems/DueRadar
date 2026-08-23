@@ -4,10 +4,10 @@ import { differenceInDays, parseISO } from "date-fns";
 type ObligationStatus = "active" | "expired" | "completed" | "paused";
 
 const STATUS_CONFIG: Record<ObligationStatus, { bg: string; text: string; dot: string; label: string }> = {
-  active:    { bg: "bg-blue-50 border border-blue-200",   text: "text-blue-700",   dot: "bg-blue-500",   label: "Active" },
-  expired:   { bg: "bg-red-50 border border-red-200",     text: "text-red-700",    dot: "bg-red-500",    label: "Expired" },
-  completed: { bg: "bg-emerald-50 border border-emerald-200", text: "text-emerald-700", dot: "bg-emerald-500", label: "Completed" },
-  paused:    { bg: "bg-slate-100 border border-slate-200", text: "text-slate-500",  dot: "bg-slate-400",  label: "Paused" },
+  active:    { bg: "bg-cyan-500/10 border border-cyan-500/30",   text: "text-[#00C8F0]",   dot: "bg-[#00C8F0]",   label: "Active" },
+  expired:   { bg: "bg-red-500/15 border border-red-500/30",     text: "text-[#FF4040]",    dot: "bg-[#FF4040]",    label: "Expired" },
+  completed: { bg: "bg-emerald-500/10 border border-emerald-500/30", text: "text-[#00E676]", dot: "bg-[#00E676]", label: "Completed" },
+  paused:    { bg: "bg-white/[0.04] border border-white/[0.08]", text: "text-[#8898A8]",  dot: "bg-[#8898A8]",  label: "Paused" },
 };
 
 export function StatusBadge({ status }: { status: string }) {
@@ -42,31 +42,31 @@ export function DueDateBadge({ dueDate, status }: { dueDate: string; status: str
 
   if (days < 0) {
     return (
-      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-red-50 border border-red-200 text-red-700 text-xs font-semibold">
-        <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse" />
+      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-red-500/15 border border-red-500/30 text-[#FF4040] text-xs font-semibold">
+        <span className="w-1.5 h-1.5 rounded-full bg-[#FF4040] animate-pulse" />
         {Math.abs(days)}d overdue
       </span>
     );
   }
   if (days === 0) {
     return (
-      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-amber-50 border border-amber-200 text-amber-700 text-xs font-semibold">
-        <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse" />
+      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-amber-500/15 border border-amber-500/35 text-[#F5A623] text-xs font-semibold">
+        <span className="w-1.5 h-1.5 rounded-full bg-[#F5A623] animate-pulse" />
         Due today
       </span>
     );
   }
   if (days <= 7) {
     return (
-      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-amber-50 border border-amber-200 text-amber-700 text-xs font-semibold">
-        <span className="w-1.5 h-1.5 rounded-full bg-amber-400" />
+      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-amber-500/10 border border-amber-500/25 text-[#FFB84D] text-xs font-semibold">
+        <span className="w-1.5 h-1.5 rounded-full bg-[#F5A623]" />
         {days}d left
       </span>
     );
   }
   if (days <= 30) {
     return (
-      <span className="text-xs text-slate-500 font-medium">
+      <span className="text-xs text-[#8898A8] font-medium">
         {days}d left
       </span>
     );

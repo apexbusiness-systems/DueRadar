@@ -1,5 +1,5 @@
 import { useRef, useEffect, useCallback } from "react";
-import { Link } from "wouter";
+import { Link, useLocation } from "wouter";
 import { RadarMark } from "@/components/layout/AppLayout";
 import { ContractsIcon, PermitsIcon, InsuranceIcon, ComplianceIcon, DeadlinesIcon, ExposureIcon } from "@/pages/info-detail";
 import { cn } from "@/lib/utils";
@@ -8,6 +8,7 @@ import { cn } from "@/lib/utils";
 export function BtnAmber({ children, onClick, className }: { children: React.ReactNode; onClick?: () => void; className?: string }) {
   return (
     <button
+      type="button"
       className={cn(
         "inline-flex items-center gap-[7px] px-4 py-[9px] rounded-lg text-[13.5px] font-semibold transition-all duration-150 whitespace-nowrap",
         className
@@ -36,6 +37,7 @@ export function BtnAmber({ children, onClick, className }: { children: React.Rea
 export function BtnGhost({ children, onClick }: { children: React.ReactNode; onClick?: () => void }) {
   return (
     <button
+      type="button"
       className="inline-flex items-center gap-[7px] px-4 py-[9px] rounded-lg text-[13.5px] font-semibold transition-all duration-150 whitespace-nowrap text-[#8898A8] border border-[rgba(255,255,255,.07)] hover:bg-[rgba(255,255,255,.04)] hover:text-[#F0F4F8] hover:border-[rgba(0,200,240,.28)]"
       onClick={onClick}
     >
@@ -325,16 +327,39 @@ const STEPS = [
   { n: "04", label: "Protect", desc: "Track your protected assets and reduce operational stress.", color: "#00E676" },
 ];
 
-export default function LandingPage({ onEnter }: { onEnter?: () => void }) {
+export default function LandingPage({
+  onEnter,
+  onViewRegister,
+}: {
+  onEnter?: () => void;
+  onViewRegister?: () => void;
+}) {
+  const [, setLocation] = useLocation();
+
+  const handleEnter = () => {
+    if (onEnter) {
+      onEnter();
+    } else {
+      setLocation("/dashboard");
+    }
+  };
+
+  const handleViewRegister = () => {
+    if (onViewRegister) {
+      onViewRegister();
+    } else {
+      setLocation("/obligations");
+    }
+  };
 
   return (
-    <div className="min-h-screen overflow-x-hidden flex flex-col" style={{ background: "#050709" }}>
+    <div className="min-h-screen overflow-x-hidden flex flex-col bg-[#050709]">
       {/* Sticky Premium Navbar */}
-      <header className="sticky top-0 z-50 bg-[#050709]/80 backdrop-blur-md border-b border-[rgba(255,255,255,.06)] transition-all duration-300">
-        <div className="max-w-[1120px] mx-auto px-6 h-16 flex items-center justify-between">
+      <header className="sticky top-0 z-50 bg-[#050709]/80 backdrop-blur-md border-b border-white/[0.06] transition-all duration-300">
+        <div className="max-w-[1120px] mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
           <div className="flex items-center gap-2.5">
-            <RadarMark size={60} />
-            <span className="text-[24px] font-extrabold tracking-tight text-[#F0F4F8]">
+            <RadarMark size={36} />
+            <span className="text-xl sm:text-2xl font-extrabold tracking-tight text-[#F0F4F8]">
               Due<span className="text-[#F5A623]">Radar</span>
             </span>
           </div>
@@ -345,22 +370,22 @@ export default function LandingPage({ onEnter }: { onEnter?: () => void }) {
             <a href="#coverage" className="text-xs font-bold text-[#8898A8] hover:text-[#F5A623] tracking-wider uppercase transition-colors">Coverage</a>
           </nav>
           {/* CTAs */}
-          <div className="flex items-center gap-4.5">
+          <div className="flex items-center gap-3 sm:gap-4.5">
             <Link href="/sign-in">
               <span className="text-xs font-bold text-[#8898A8] hover:text-[#F5A623] cursor-pointer tracking-wider uppercase transition-colors">Sign In</span>
             </Link>
             <Link href="/sign-up">
-              <span className="cursor-pointer inline-flex items-center justify-center px-4 py-2 rounded-lg text-xs font-bold bg-[#F5A623] text-[#0F0800] hover:brightness-110 shadow-[0_0_12px_rgba(245,166,35,.15)] transition-all">Start Free</span>
+              <span className="cursor-pointer inline-flex items-center justify-center px-3.5 sm:px-4 py-2 rounded-lg text-xs font-bold bg-[#F5A623] text-[#0F0800] hover:brightness-110 shadow-[0_0_12px_rgba(245,166,35,.15)] transition-all">Start Free</span>
             </Link>
           </div>
         </div>
       </header>
 
       {/* Hero section */}
-      <div className="relative min-h-screen flex items-center overflow-hidden">
+      <div className="relative min-h-[90vh] sm:min-h-screen flex items-center overflow-hidden">
         {/* Background image */}
         <div
-          className="absolute inset-0 opacity-92"
+          className="absolute inset-0 opacity-90"
           style={{
             backgroundImage: "url('/hero.png')",
             backgroundSize: "cover",
@@ -371,28 +396,28 @@ export default function LandingPage({ onEnter }: { onEnter?: () => void }) {
         <div
           className="absolute inset-0"
           style={{
-            background: "linear-gradient(90deg, rgba(5,7,9,.96) 36%, rgba(5,7,9,.5) 58%, rgba(5,7,9,.2) 100%)",
+            background: "linear-gradient(90deg, rgba(5,7,9,.97) 36%, rgba(5,7,9,.65) 65%, rgba(5,7,9,.25) 100%)",
           }}
         />
         <HeroOverlay />
         <OrbitingLabels />
 
-        <div className="relative z-[2] px-20 py-20 max-w-[640px]">
-          <div className="inline-flex items-center gap-2 bg-[rgba(245,166,35,.08)] border border-[rgba(245,166,35,.22)] rounded-full px-3.5 py-1.5 mb-8 w-fit shadow-[0_0_15px_rgba(245,166,35,.06)]">
+        <div className="relative z-[2] px-6 sm:px-12 lg:px-20 py-12 sm:py-16 lg:py-20 max-w-[640px] w-full">
+          <div className="inline-flex items-center gap-2 bg-[rgba(245,166,35,.08)] border border-[rgba(245,166,35,.22)] rounded-full px-3.5 py-1.5 mb-6 sm:mb-8 w-fit shadow-[0_0_15px_rgba(245,166,35,.06)]">
             <span className="w-1.5 h-1.5 rounded-full bg-[#F5A623] animate-pulse" />
             <span className="text-[10px] font-bold text-[#FFB84D] uppercase tracking-[0.16em]">
               Live Deadline Tracking
             </span>
           </div>
-          <h1 className="text-[68px] font-bold tracking-[-0.04em] leading-none mb-0 text-white">
+          <h1 className="text-4xl sm:text-5xl lg:text-[68px] font-bold tracking-[-0.04em] leading-[1.06] mb-0 text-white" style={{ fontSize: "var(--text-hero)" }}>
             Never miss another deadline.
           </h1>
-          <p className="text-[17px] font-medium text-[#CBD5E1] mt-5 mb-9 leading-relaxed max-w-[520px]">
+          <p className="text-sm sm:text-base lg:text-[17px] font-medium text-[#CBD5E1] mt-4 sm:mt-5 mb-7 sm:mb-9 leading-relaxed max-w-[520px]" style={{ fontSize: "var(--text-base)" }}>
             Track your contracts, permits, and compliance dates before they become expensive problems.
           </p>
-          <div className="flex gap-3 flex-wrap">
-            <BtnAmber onClick={onEnter}>Open Command Center →</BtnAmber>
-            <BtnGhost>View Due Register</BtnGhost>
+          <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
+            <BtnAmber onClick={handleEnter}>Open Command Center →</BtnAmber>
+            <BtnGhost onClick={handleViewRegister}>View Due Register</BtnGhost>
           </div>
         </div>
       </div>
@@ -621,6 +646,7 @@ export default function LandingPage({ onEnter }: { onEnter?: () => void }) {
 
           <Link href="/sign-up">
             <button
+              type="button"
               className="px-10 py-4 rounded-xl text-[16px] font-black tracking-tight transition-all duration-200 hover:brightness-110 hover:-translate-y-0.5"
               style={{
                 background: "#F5A623",

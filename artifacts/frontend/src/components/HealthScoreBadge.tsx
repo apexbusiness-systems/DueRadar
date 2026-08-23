@@ -2,10 +2,10 @@ import { cn } from "@/lib/utils";
 
 export function HealthScoreBadge({ score, size = "sm" }: { score: number; size?: "sm" | "md" }) {
   const tone = score >= 70
-    ? "bg-emerald-50 text-emerald-700 border-emerald-200"
+    ? "bg-emerald-500/10 text-[#00E676] border-emerald-500/30"
     : score >= 40
-      ? "bg-amber-50 text-amber-700 border-amber-200"
-      : "bg-red-50 text-red-700 border-red-200";
+      ? "bg-amber-500/10 text-[#F5A623] border-amber-500/30"
+      : "bg-red-500/15 text-[#FF4040] border-red-500/30";
 
   return (
     <span
