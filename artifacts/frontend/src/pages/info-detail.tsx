@@ -406,12 +406,12 @@ export default function InfoDetailPage() {
         {/* Back and Direct Command Center CTAs */}
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4.5 pt-8" style={{ borderTop: "1px solid rgba(255,255,255,.05)" }}>
           <Link href="/">
-            <button className="px-6 py-3 rounded-lg text-xs font-bold bg-[#0A0E18] border border-[rgba(255,255,255,.1)] text-[#8898A8] hover:text-[#F0F4F8] hover:border-[rgba(255,255,255,.25)] transition-all">
+            <button type="button" className="px-6 py-3 rounded-lg text-xs font-bold bg-[#0A0E18] border border-[rgba(255,255,255,.1)] text-[#8898A8] hover:text-[#F0F4F8] hover:border-[rgba(255,255,255,.25)] transition-all">
               ← Return to Landing Page
             </button>
           </Link>
           <Link href="/dashboard">
-            <button className="px-8 py-3 rounded-lg text-xs font-bold bg-[#F5A623] text-[#0F0800] hover:brightness-110 shadow-[0_0_16px_rgba(245,166,35,.15)] transition-all">
+            <button type="button" className="px-8 py-3 rounded-lg text-xs font-bold bg-[#F5A623] text-[#0F0800] hover:brightness-110 shadow-[0_0_16px_rgba(245,166,35,.15)] transition-all">
               Open Command Center →
             </button>
           </Link>

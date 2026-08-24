@@ -45,9 +45,9 @@ type FormValues = z.infer<typeof formSchema>;
 
 function FormSection({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm">
-      <div className="px-6 py-4 border-b border-slate-100 bg-slate-50/50">
-        <h2 className="text-sm font-semibold text-slate-700">{title}</h2>
+    <div className="bg-obsidian-surface rounded-2xl border border-white/[0.07] overflow-hidden shadow-[0_4px_24px_rgba(0,0,0,0.5)]">
+      <div className="px-6 py-4 border-b border-white/[0.07] bg-white/[0.02]">
+        <h2 className="text-sm font-semibold text-[#F0F4F8]">{title}</h2>
       </div>
       <div className="p-6 space-y-5">{children}</div>
     </div>
@@ -116,28 +116,30 @@ export default function ObligationNewPage() {
         {/* Header */}
         <div className="flex items-center gap-4 mb-8">
           <button
+            type="button"
             onClick={() => setLocation("/obligations")}
-            className="w-9 h-9 rounded-xl bg-white border border-slate-200 flex items-center justify-center text-slate-500 hover:text-slate-900 hover:border-slate-300 transition-colors shadow-sm"
+            className="w-9 h-9 rounded-xl bg-obsidian-surface border border-white/[0.08] flex items-center justify-center text-[#8898A8] hover:text-[#F0F4F8] hover:border-white/[0.2] transition-colors shadow-sm"
             data-testid="button-back"
+            aria-label="Back to obligations"
           >
             <ArrowLeft className="w-4 h-4" />
           </button>
           <div>
-            <h1 className="text-2xl font-black text-slate-900 tracking-tight">New Obligation</h1>
-            <p className="text-slate-500 text-sm mt-0.5">Track a new deadline or renewal</p>
+            <h1 className="text-2xl font-black text-[#F0F4F8] tracking-tight">New Obligation</h1>
+            <p className="text-[#8898A8] text-sm mt-0.5">Track a new deadline or renewal</p>
           </div>
         </div>
 
         {wsError && (
-          <div className="mb-6 bg-red-50 border border-red-200 rounded-xl px-4 py-3 text-sm text-red-700">
+          <div className="mb-6 bg-red-500/15 border border-red-500/30 rounded-xl px-4 py-3 text-sm text-[#FF4040]">
             {wsError}
           </div>
         )}
 
         {wsLoading ? (
           <div className="space-y-5">
-            <Skeleton className="h-60 w-full rounded-2xl" />
-            <Skeleton className="h-40 w-full rounded-2xl" />
+            <Skeleton className="h-60 w-full rounded-2xl bg-white/[0.05]" />
+            <Skeleton className="h-40 w-full rounded-2xl bg-white/[0.05]" />
           </div>
         ) : (
           <Form {...form}>
@@ -145,11 +147,11 @@ export default function ObligationNewPage() {
               <FormSection title="Core Details">
                 <FormField control={form.control} name="title" render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-slate-700 font-medium">Title <span className="text-red-500">*</span></FormLabel>
+                    <FormLabel className="text-[#CBD5E1] font-medium text-xs">Title <span className="text-[#FF4040]">*</span></FormLabel>
                     <FormControl>
                       <Input
                         placeholder="e.g. Business License Renewal"
-                        className="rounded-xl border-slate-200 focus-visible:ring-slate-300 bg-slate-50 focus:bg-white transition-colors"
+                        className="rounded-xl border-white/[0.08] bg-obsidian-surface text-[#F0F4F8] placeholder:text-[#4A5568] focus-visible:ring-[#F5A623] transition-colors"
                         {...field}
                         data-testid="input-title"
                       />
@@ -161,14 +163,14 @@ export default function ObligationNewPage() {
                 <div className="grid grid-cols-2 gap-4">
                   <FormField control={form.control} name="category" render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-slate-700 font-medium">Category <span className="text-red-500">*</span></FormLabel>
+                      <FormLabel className="text-[#CBD5E1] font-medium text-xs">Category <span className="text-[#FF4040]">*</span></FormLabel>
                       <Select onValueChange={field.onChange} value={field.value}>
                         <FormControl>
-                          <SelectTrigger className="rounded-xl border-slate-200 bg-slate-50 focus:bg-white" data-testid="select-category">
+                          <SelectTrigger className="rounded-xl border-white/[0.08] bg-obsidian-surface text-[#F0F4F8]" data-testid="select-category">
                             <SelectValue placeholder="Select..." />
                           </SelectTrigger>
                         </FormControl>
-                        <SelectContent>
+                        <SelectContent className="bg-[#0A0E18] border-white/[0.1] text-[#F0F4F8]">
                           {CATEGORIES.map((c) => <SelectItem key={c} value={c}>{c}</SelectItem>)}
                         </SelectContent>
                       </Select>
@@ -178,11 +180,11 @@ export default function ObligationNewPage() {
 
                   <FormField control={form.control} name="dueDate" render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-slate-700 font-medium">Due Date <span className="text-red-500">*</span></FormLabel>
+                      <FormLabel className="text-[#CBD5E1] font-medium text-xs">Due Date <span className="text-[#FF4040]">*</span></FormLabel>
                       <FormControl>
                         <Input
                           type="date"
-                          className="rounded-xl border-slate-200 bg-slate-50 focus:bg-white focus-visible:ring-slate-300"
+                          className="rounded-xl border-white/[0.08] bg-obsidian-surface text-[#F0F4F8] focus-visible:ring-[#F5A623]"
                           {...field}
                           data-testid="input-due-date"
                         />
@@ -194,14 +196,14 @@ export default function ObligationNewPage() {
 
                 <FormField control={form.control} name="renewalFrequency" render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-slate-700 font-medium">Renewal Frequency</FormLabel>
+                    <FormLabel className="text-[#CBD5E1] font-medium text-xs">Renewal Frequency</FormLabel>
                     <Select onValueChange={field.onChange} value={field.value}>
                       <FormControl>
-                        <SelectTrigger className="rounded-xl border-slate-200 bg-slate-50" data-testid="select-frequency">
+                        <SelectTrigger className="rounded-xl border-white/[0.08] bg-obsidian-surface text-[#F0F4F8]" data-testid="select-frequency">
                           <SelectValue placeholder="None (one-time)" />
                         </SelectTrigger>
                       </FormControl>
-                      <SelectContent>
+                      <SelectContent className="bg-[#0A0E18] border-white/[0.1] text-[#F0F4F8]">
                         <SelectItem value="once">One-time</SelectItem>
                         <SelectItem value="monthly">Monthly</SelectItem>
                         <SelectItem value="quarterly">Quarterly</SelectItem>
@@ -215,12 +217,12 @@ export default function ObligationNewPage() {
 
                 <FormField control={form.control} name="description" render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-slate-700 font-medium">Description</FormLabel>
+                    <FormLabel className="text-[#CBD5E1] font-medium text-xs">Description</FormLabel>
                     <FormControl>
                       <Textarea
                         placeholder="Brief description of this obligation..."
                         rows={2}
-                        className="rounded-xl border-slate-200 bg-slate-50 focus:bg-white focus-visible:ring-slate-300 resize-none"
+                        className="rounded-xl border-white/[0.08] bg-obsidian-surface text-[#F0F4F8] placeholder:text-[#4A5568] focus-visible:ring-[#F5A623] resize-none"
                         {...field}
                         data-testid="input-description"
                       />
@@ -231,22 +233,22 @@ export default function ObligationNewPage() {
               </FormSection>
 
               <FormSection title="Ownership">
-                <p className="text-xs text-slate-500 -mt-1">Assign an owner and backup so reminders reach the right people.</p>
+                <p className="text-xs text-[#8898A8] -mt-1">Assign an owner and backup so reminders reach the right people.</p>
                 <div className="grid grid-cols-2 gap-4">
                   <FormField control={form.control} name="ownerEmail" render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-slate-700 font-medium">Owner Email</FormLabel>
+                      <FormLabel className="text-[#CBD5E1] font-medium text-xs">Owner Email</FormLabel>
                       <FormControl>
-                        <Input type="email" placeholder="owner@company.com" className="rounded-xl border-slate-200 bg-slate-50 focus:bg-white focus-visible:ring-slate-300" {...field} data-testid="input-owner-email" />
+                        <Input type="email" placeholder="owner@company.com" className="rounded-xl border-white/[0.08] bg-obsidian-surface text-[#F0F4F8] placeholder:text-[#4A5568] focus-visible:ring-[#F5A623]" {...field} data-testid="input-owner-email" />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )} />
                   <FormField control={form.control} name="backupOwnerEmail" render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-slate-700 font-medium">Backup Owner</FormLabel>
+                      <FormLabel className="text-[#CBD5E1] font-medium text-xs">Backup Owner</FormLabel>
                       <FormControl>
-                        <Input type="email" placeholder="backup@company.com" className="rounded-xl border-slate-200 bg-slate-50 focus:bg-white focus-visible:ring-slate-300" {...field} data-testid="input-backup-email" />
+                        <Input type="email" placeholder="backup@company.com" className="rounded-xl border-white/[0.08] bg-obsidian-surface text-[#F0F4F8] placeholder:text-[#4A5568] focus-visible:ring-[#F5A623]" {...field} data-testid="input-backup-email" />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -258,7 +260,7 @@ export default function ObligationNewPage() {
                 <FormField control={form.control} name="notes" render={({ field }) => (
                   <FormItem>
                     <FormControl>
-                      <Textarea placeholder="Any additional context, filing instructions, or notes..." rows={3} className="rounded-xl border-slate-200 bg-slate-50 focus:bg-white focus-visible:ring-slate-300 resize-none" {...field} data-testid="input-notes" />
+                      <Textarea placeholder="Any additional context, filing instructions, or notes..." rows={3} className="rounded-xl border-white/[0.08] bg-obsidian-surface text-[#F0F4F8] placeholder:text-[#4A5568] focus-visible:ring-[#F5A623] resize-none" {...field} data-testid="input-notes" />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -269,7 +271,7 @@ export default function ObligationNewPage() {
                 <Button
                   type="submit"
                   disabled={createObligation.isPending || !workspaceId}
-                  className="flex-1 bg-slate-900 hover:bg-slate-800 text-white rounded-xl h-11 font-semibold shadow-sm gap-2"
+                  className="flex-1 bg-[#F5A623] hover:bg-[#F5A623]/90 text-[#0F0800] font-bold rounded-xl h-11 shadow-[0_0_16px_rgba(245,166,35,0.2)] border-none gap-2"
                   data-testid="button-submit"
                 >
                   {createObligation.isPending ? (
@@ -282,7 +284,7 @@ export default function ObligationNewPage() {
                   type="button"
                   variant="outline"
                   onClick={() => setLocation("/obligations")}
-                  className="rounded-xl h-11 border-slate-200 text-slate-600"
+                  className="rounded-xl h-11 border-white/[0.08] bg-white/[0.02] text-[#CBD5E1] hover:bg-white/[0.06] hover:text-[#F0F4F8]"
                   data-testid="button-cancel"
                 >
                   Cancel

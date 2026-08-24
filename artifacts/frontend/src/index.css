@@ -68,6 +68,49 @@
   --font-serif: var(--app-font-serif);
   --font-mono: var(--app-font-mono);
 
+  --color-obsidian-bg: var(--rr-bg);
+  --color-obsidian-surface: var(--rr-surface);
+  --color-obsidian-surface-2: var(--rr-surface-2);
+  --color-obsidian-surface-3: var(--rr-surface-3);
+  --color-obsidian-glass: var(--rr-glass);
+  --color-obsidian-glass-2: var(--rr-glass-2);
+
+  --color-radar-amber: var(--rr-amber);
+  --color-radar-amber-2: var(--rr-amber-2);
+  --color-radar-amber-glow: var(--rr-amber-glow);
+  --color-radar-amber-edge: var(--rr-amber-edge);
+  --color-radar-amber-text: var(--rr-amber-text);
+
+  --color-radar-cyan: var(--rr-cyan);
+  --color-radar-cyan-2: var(--rr-cyan-2);
+  --color-radar-cyan-glow: var(--rr-cyan-glow);
+  --color-radar-cyan-edge: var(--rr-cyan-edge);
+
+  --color-radar-red: var(--rr-red);
+  --color-radar-red-glow: var(--rr-red-glow);
+  --color-radar-orange: var(--rr-orange);
+  --color-radar-green: var(--rr-green);
+  --color-radar-green-glow: var(--rr-green-glow);
+  --color-radar-green-2: var(--rr-green-2);
+
+  --color-radar-fg: var(--rr-fg);
+  --color-radar-fg-2: var(--rr-fg-2);
+  --color-radar-fg-3: var(--rr-fg-3);
+
+  --color-radar-line: var(--rr-line);
+  --color-radar-line-cyan: var(--rr-line-cyan);
+  --color-radar-line-amber: var(--rr-line-amber);
+
+  --text-fluid-xs: var(--text-xs);
+  --text-fluid-sm: var(--text-sm);
+  --text-fluid-base: var(--text-base);
+  --text-fluid-lg: var(--text-lg);
+  --text-fluid-xl: var(--text-xl);
+  --text-fluid-2xl: var(--text-2xl);
+  --text-fluid-3xl: var(--text-3xl);
+  --text-fluid-4xl: var(--text-4xl);
+  --text-fluid-hero: var(--text-hero);
+
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);

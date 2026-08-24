@@ -37,13 +37,13 @@ const STATUSES = [
 ];
 
 const CATEGORY_COLORS: Record<string, string> = {
-  Licensing: "bg-blue-500",
+  Licensing: "bg-[#00C8F0]",
   Insurance: "bg-purple-500",
-  Contracts: "bg-indigo-500",
-  Software: "bg-sky-500",
-  "HR & Compliance": "bg-emerald-500",
-  "Real Estate": "bg-orange-500",
-  Other: "bg-slate-400",
+  Contracts: "bg-[#FF6B35]",
+  Software: "bg-sky-400",
+  "HR & Compliance": "bg-[#00E676]",
+  "Real Estate": "bg-[#FF8C00]",
+  Other: "bg-[#8898A8]",
 };
 
 export default function ObligationsPage() {
@@ -140,8 +140,8 @@ export default function ObligationsPage() {
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
           <div>
-            <h1 className="text-2xl font-black text-slate-900 tracking-tight">Obligations</h1>
-            <p className="text-sm text-slate-500 mt-0.5">
+            <h1 className="text-2xl font-black text-[#F0F4F8] tracking-tight">Due Register</h1>
+            <p className="text-sm text-[#8898A8] mt-0.5">
               {!workspaceId
                 ? "Loading..."
                 : obligationsQuery.isLoading
@@ -151,9 +151,10 @@ export default function ObligationsPage() {
           </div>
           <div className="flex items-center gap-2">
             <Button
+              type="button"
               variant="outline"
               size="sm"
-              className="gap-2 text-slate-600 border-slate-200 hover:bg-slate-50 rounded-xl"
+              className="gap-2 text-[#CBD5E1] border-white/[0.08] bg-white/[0.02] hover:bg-white/[0.06] hover:text-[#F0F4F8] rounded-xl"
               onClick={handleExport}
               disabled={!workspaceId}
               data-testid="button-export-csv"
@@ -162,13 +163,24 @@ export default function ObligationsPage() {
               <span className="hidden sm:inline">Export CSV</span>
             </Button>
             <Link href="/import">
-              <Button variant="outline" size="sm" className="gap-2 text-slate-600 border-slate-200 hover:bg-slate-50 rounded-xl" data-testid="link-import-csv">
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                className="gap-2 text-[#CBD5E1] border-white/[0.08] bg-white/[0.02] hover:bg-white/[0.06] hover:text-[#F0F4F8] rounded-xl"
+                data-testid="link-import-csv"
+              >
                 <Upload className="w-4 h-4" />
                 <span className="hidden sm:inline">Import</span>
               </Button>
             </Link>
             <Link href="/obligations/new">
-              <Button size="sm" className="gap-2 bg-slate-900 hover:bg-slate-800 text-white rounded-xl shadow-sm" data-testid="button-new-obligation">
+              <Button
+                type="button"
+                size="sm"
+                className="gap-2 bg-[#F5A623] hover:bg-[#F5A623]/90 text-[#0F0800] font-bold rounded-xl shadow-[0_0_16px_rgba(245,166,35,0.2)] border-none"
+                data-testid="button-new-obligation"
+              >
                 <Plus className="w-4 h-4" />
                 New
               </Button>
@@ -179,30 +191,30 @@ export default function ObligationsPage() {
         {/* Filters */}
         <div className="flex flex-wrap gap-2.5 mb-5">
           <div className="relative flex-1 min-w-52">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#8898A8]" />
             <Input
               placeholder="Search obligations..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="pl-9 rounded-xl border-slate-200 bg-white shadow-sm focus-visible:ring-slate-300 h-9"
+              className="pl-9 rounded-xl border-white/[0.08] bg-obsidian-surface text-[#F0F4F8] placeholder:text-[#4A5568] shadow-sm focus-visible:ring-[#F5A623] h-9"
               data-testid="input-search"
             />
           </div>
           <Select value={status} onValueChange={setStatus}>
-            <SelectTrigger className="w-40 rounded-xl border-slate-200 bg-white shadow-sm h-9" data-testid="select-status">
+            <SelectTrigger className="w-40 rounded-xl border-white/[0.08] bg-obsidian-surface text-[#F0F4F8] shadow-sm h-9" data-testid="select-status">
               <SelectValue />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className="bg-[#0A0E18] border-white/[0.1] text-[#F0F4F8]">
               {STATUSES.map((s) => (
                 <SelectItem key={s.value} value={s.value}>{s.label}</SelectItem>
               ))}
             </SelectContent>
           </Select>
           <Select value={category} onValueChange={setCategory}>
-            <SelectTrigger className="w-44 rounded-xl border-slate-200 bg-white shadow-sm h-9" data-testid="select-category">
+            <SelectTrigger className="w-44 rounded-xl border-white/[0.08] bg-obsidian-surface text-[#F0F4F8] shadow-sm h-9" data-testid="select-category">
               <SelectValue />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className="bg-[#0A0E18] border-white/[0.1] text-[#F0F4F8]">
               {CATEGORIES.map((c) => (
                 <SelectItem key={c} value={c}>{c}</SelectItem>
               ))}
@@ -211,18 +223,20 @@ export default function ObligationsPage() {
         </div>
 
         {/* Table card */}
-        <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm">
+        <div className="bg-obsidian-surface rounded-2xl border border-white/[0.07] overflow-hidden shadow-[0_4px_24px_rgba(0,0,0,0.5)]">
           {!workspaceId || obligationsQuery.isLoading ? (
             <div className="p-6 space-y-3">
-              {[...Array(6)].map((_, i) => <Skeleton key={i} className="h-14 w-full rounded-xl" />)}
+              {Array.from({ length: 6 }).map((_, i) => (
+                <Skeleton key={i} className="h-14 w-full rounded-xl bg-white/[0.05]" />
+              ))}
             </div>
           ) : obligations.length === 0 ? (
             <div className="py-20 px-6 text-center">
-              <div className="w-14 h-14 bg-slate-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                <ClipboardList className="w-7 h-7 text-slate-400" />
+              <div className="w-14 h-14 bg-white/[0.03] border border-white/[0.06] rounded-2xl flex items-center justify-center mx-auto mb-4">
+                <ClipboardList className="w-7 h-7 text-[#8898A8]" />
               </div>
-              <p className="font-bold text-slate-700 text-lg mb-1">No obligations found</p>
-              <p className="text-slate-400 text-sm mb-6">
+              <p className="font-bold text-[#F0F4F8] text-lg mb-1">No obligations found</p>
+              <p className="text-[#8898A8] text-sm mb-6">
                 {isFiltered
                   ? "Try adjusting your filters."
                   : "Add your first obligation to get started."}
@@ -230,12 +244,12 @@ export default function ObligationsPage() {
               {!isFiltered && (
                 <div className="flex items-center justify-center gap-3">
                   <Link href="/obligations/new">
-                    <Button size="sm" className="bg-slate-900 hover:bg-slate-800 rounded-xl gap-2" data-testid="button-create-first">
+                    <Button type="button" size="sm" className="bg-[#F5A623] hover:bg-[#F5A623]/90 text-[#0F0800] font-bold rounded-xl gap-2 shadow-[0_0_16px_rgba(245,166,35,0.2)] border-none" data-testid="button-create-first">
                       <Plus className="w-4 h-4" /> Add obligation
                     </Button>
                   </Link>
                   <Link href="/import">
-                    <Button variant="outline" size="sm" className="rounded-xl gap-2 border-slate-200">
+                    <Button type="button" variant="outline" size="sm" className="rounded-xl gap-2 border-white/[0.08] bg-white/[0.02] text-[#CBD5E1] hover:bg-white/[0.06] hover:text-[#F0F4F8]">
                       <Upload className="w-4 h-4" /> Import CSV
                     </Button>
                   </Link>
@@ -246,34 +260,33 @@ export default function ObligationsPage() {
             <div className="overflow-x-auto">
               <table className="w-full">
                 <thead>
-                  <tr className="border-b border-slate-100 bg-slate-50/80">
-                    <th className="text-left px-6 py-3.5 text-xs font-semibold text-slate-500 uppercase tracking-wide">Obligation</th>
-                    <th className="text-left px-4 py-3.5 text-xs font-semibold text-slate-500 uppercase tracking-wide">Category</th>
-                    <th className="text-left px-4 py-3.5 text-xs font-semibold text-slate-500 uppercase tracking-wide">Status</th>
-                    <th className="text-left px-4 py-3.5 text-xs font-semibold text-slate-500 uppercase tracking-wide">Due Date</th>
-                    <th className="text-left px-4 py-3.5 text-xs font-semibold text-slate-500 uppercase tracking-wide hidden lg:table-cell">Health</th>
-                    <th className="text-left px-4 py-3.5 text-xs font-semibold text-slate-500 uppercase tracking-wide hidden lg:table-cell">Owner</th>
-                    <th className="text-right px-6 py-3.5 text-xs font-semibold text-slate-500 uppercase tracking-wide">Actions</th>
+                  <tr className="border-b border-white/[0.07] bg-white/[0.02]">
+                    <th className="text-left px-6 py-3.5 text-xs font-semibold text-[#8898A8] uppercase tracking-wide">Obligation</th>
+                    <th className="text-left px-4 py-3.5 text-xs font-semibold text-[#8898A8] uppercase tracking-wide">Category</th>
+                    <th className="text-left px-4 py-3.5 text-xs font-semibold text-[#8898A8] uppercase tracking-wide">Status</th>
+                    <th className="text-left px-4 py-3.5 text-xs font-semibold text-[#8898A8] uppercase tracking-wide">Due Date</th>
+                    <th className="text-left px-4 py-3.5 text-xs font-semibold text-[#8898A8] uppercase tracking-wide hidden lg:table-cell">Health</th>
+                    <th className="text-left px-4 py-3.5 text-xs font-semibold text-[#8898A8] uppercase tracking-wide hidden lg:table-cell">Owner</th>
+                    <th className="text-right px-6 py-3.5 text-xs font-semibold text-[#8898A8] uppercase tracking-wide">Actions</th>
                   </tr>
                 </thead>
-                <tbody>
-                  {obligations.map((o, idx) => {
-                    // Backward-compatible fallback while API client schema catches up.
+                <tbody className="divide-y divide-white/[0.05]">
+                  {obligations.map((o) => {
                     const healthScore =
                       "healthScore" in o && typeof o.healthScore === "number" ? o.healthScore : 100;
 
                     return (
                     <tr
                       key={o.id}
-                      className={cn("hover:bg-slate-50/80 transition-colors group", idx < obligations.length - 1 ? "border-b border-slate-100" : "")}
+                      className="hover:bg-white/[0.03] transition-colors group"
                       data-testid={`row-obligation-${o.id}`}
                     >
                       <td className="px-6 py-4">
                         <Link href={`/obligations/${o.id}`}>
                           <div className="cursor-pointer flex items-center gap-3">
-                            <div className={cn("w-2 h-2 rounded-full flex-shrink-0", CATEGORY_COLORS[o.category] ?? "bg-slate-400")} />
+                            <div className={cn("w-2 h-2 rounded-full flex-shrink-0", CATEGORY_COLORS[o.category] ?? "bg-[#8898A8]")} />
                             <div>
-                              <p className="font-semibold text-slate-800 group-hover:text-slate-900 truncate max-w-52">{o.title}</p>
+                              <p className="font-semibold text-[#F0F4F8] group-hover:text-[#F5A623] truncate max-w-52">{o.title}</p>
                               <div className="mt-0.5">
                                 <DueDateBadge dueDate={o.dueDate} status={o.status} />
                               </div>
@@ -282,29 +295,30 @@ export default function ObligationsPage() {
                         </Link>
                       </td>
                       <td className="px-4 py-4">
-                        <span className="text-sm text-slate-500">{o.category}</span>
+                        <span className="text-sm text-[#8898A8]">{o.category}</span>
                       </td>
                       <td className="px-4 py-4">
                         <StatusBadge status={o.status} />
                       </td>
                       <td className="px-4 py-4">
-                        <span className="text-sm text-slate-600 font-medium">{format(parseISO(o.dueDate), "MMM d, yyyy")}</span>
+                        <span className="text-sm text-[#CBD5E1] font-mono font-medium">{format(parseISO(o.dueDate), "MMM d, yyyy")}</span>
                       </td>
                       <td className="px-4 py-4 hidden lg:table-cell"><HealthScoreBadge score={healthScore} size="sm" /></td>
                       <td className="px-4 py-4 hidden lg:table-cell">
                         {o.ownerEmail ? (
-                          <span className="text-sm text-slate-600 truncate max-w-36 block">{o.ownerEmail}</span>
+                          <span className="text-sm text-[#8898A8] truncate max-w-36 block">{o.ownerEmail}</span>
                         ) : (
-                          <span className="text-xs text-amber-600 bg-amber-50 border border-amber-200 rounded-full px-2 py-0.5">No owner</span>
+                          <span className="text-xs text-[#F5A623] bg-amber-500/10 border border-amber-500/25 rounded-full px-2 py-0.5">No owner</span>
                         )}
                       </td>
                       <td className="px-6 py-4">
-                        <div className="flex items-center justify-end gap-3">
+                        <div className="flex items-center justify-end gap-2">
                           {o.status === "active" && (
                             <Tooltip>
                               <TooltipTrigger asChild>
                                 <button
-                                  className="w-8 h-8 rounded-lg flex items-center justify-center text-emerald-600 hover:bg-emerald-50 focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:outline-none transition-colors"
+                                  type="button"
+                                  className="w-8 h-8 rounded-lg flex items-center justify-center text-[#00E676] hover:bg-emerald-500/15 focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:outline-none transition-colors"
                                   onClick={() => handleComplete(o.id)}
                                   data-testid={`button-complete-${o.id}`}
                                   aria-label="Mark obligation complete"
@@ -317,9 +331,10 @@ export default function ObligationsPage() {
                           )}
                           <Link href={`/obligations/${o.id}`}>
                             <Button
+                              type="button"
                               variant="outline"
                               size="sm"
-                              className="h-8 px-2.5 rounded-lg text-xs font-semibold border-slate-200 text-slate-700 hover:bg-slate-100 hover:text-slate-900 focus-visible:ring-2 focus-visible:ring-slate-400 focus-visible:outline-none"
+                              className="h-8 px-2.5 rounded-lg text-xs font-semibold border-white/[0.08] bg-white/[0.02] text-[#CBD5E1] hover:bg-white/[0.06] hover:text-[#F0F4F8] focus-visible:ring-2 focus-visible:ring-[#F5A623]"
                               data-testid={`button-view-${o.id}`}
                             >
                               Details
@@ -328,7 +343,8 @@ export default function ObligationsPage() {
                           <Tooltip>
                             <TooltipTrigger asChild>
                               <button
-                                className="w-8 h-8 rounded-lg flex items-center justify-center text-slate-300 hover:bg-red-50 hover:text-red-500 focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:outline-none transition-colors"
+                                type="button"
+                                className="w-8 h-8 rounded-lg flex items-center justify-center text-[#4A5568] hover:bg-red-500/15 hover:text-[#FF4040] focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:outline-none transition-colors"
                                 onClick={() => handleDelete(o.id, o.title)}
                                 data-testid={`button-delete-${o.id}`}
                                 aria-label="Delete obligation"
