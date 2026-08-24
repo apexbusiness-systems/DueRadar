@@ -164,7 +164,6 @@ function SignInPage() {
               path={`${basePath}/sign-in`}
               signUpUrl={`${basePath}/sign-up`}
               fallbackRedirectUrl={`${basePath}/dashboard`}
-              forceRedirectUrl={`${basePath}/dashboard`}
             />
             <p className="mt-4 text-center text-xs text-[#94A3B8]">Secure sign-in. No password required.</p>
             <nav aria-label="Legal and support links" className="mt-4 flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-xs text-[#CBD5E1]">
@@ -197,6 +196,7 @@ function SignUpPage() {
 
 function HomeRedirect() {
   const { isSignedIn, isLoaded } = useAuth();
+  const [, setLocation] = useLocation();
   // Only redirect after Clerk has fully loaded and confirmed sign-in state.
   // Rendering the landing page by default ensures it is visible in CI E2E
   // even if Clerk.js cannot be fetched (e.g. DNS failure for test keys).
@@ -204,7 +204,24 @@ function HomeRedirect() {
   if (isLoaded && isSignedIn) {
     return <Redirect to="/dashboard" />;
   }
-  return <LandingPage onEnter={() => window.location.hash = "#dashboard"} />;
+  return (
+    <LandingPage
+      onEnter={() => {
+        if (isSignedIn) {
+          setLocation("/dashboard");
+        } else {
+          setLocation("/sign-in");
+        }
+      }}
+      onViewRegister={() => {
+        if (isSignedIn) {
+          setLocation("/obligations");
+        } else {
+          setLocation("/sign-in");
+        }
+      }}
+    />
+  );
 }
 
 function ProtectedRoute({ component: Component }: { component: React.ComponentType }) {

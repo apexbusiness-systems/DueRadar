@@ -32,7 +32,6 @@ interface NavItem {
 const NAV_ITEMS: NavItem[] = [
   { id: "command", label: "Command Center", icon: "◎", href: "/dashboard" },
   { id: "register", label: "Due Register", icon: "≡", href: "/obligations" },
-  { id: "record", label: "Due Record", icon: "◈", href: "/obligations/new" },
   { id: "intake", label: "Due Intake", icon: "↑", href: "/import" },
 ];
 
